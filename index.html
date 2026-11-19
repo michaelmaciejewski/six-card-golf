@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>⛳ Six-Card Golf · Series Scorecard</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2f5f1;--panel:#fff;--ink:#0e1a13;--mute:#6b776f;--line:#e2e8e2;--acc:#0f7a45;--gold:#c8961a;--red:#e11d48;--good:#0f8a4b;--chip:#eaf0ea;--sh:0 1px 2px #0001,0 10px 28px #0000000c;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#09110d;--panel:#111c15;--ink:#eef4ee;--mute:#92a398;--line:#1f3026;--acc:#22c070;--gold:#e5b84a;--red:#fb7185;--good:#4ade80;--chip:#182519;--sh:0 1px 2px #0006;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#09110d;--panel:#111c15;--ink:#eef4ee;--mute:#92a398;--line:#1f3026;--acc:#22c070;--gold:#e5b84a;--red:#fb7185;--good:#4ade80;--chip:#182519;--sh:0 1px 2px #0006;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 Inter,system-ui,sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:20;background:var(--bg)}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:19;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.bar>div{max-width:1040px;margin:auto;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.brand{font:800 18px "Playfair Display",Georgia,serif;display:flex;gap:8px;align-items:center}.brand i{font-style:normal;color:var(--gold);letter-spacing:3px;font-size:13px}
+.pen{display:flex;align-items:center;gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:3px;box-shadow:var(--sh)}
+.pen label{font-size:11px;font-weight:600;color:var(--mute);padding:0 4px 0 10px;text-transform:uppercase;letter-spacing:.6px}
+.pen input{width:42px;text-align:center;font:700 16px Inter;border:0;background:transparent;color:var(--ink);-moz-appearance:textfield}
+.pen button{width:30px;height:30px;border-radius:50%;border:0;background:var(--acc);color:#fff;font-weight:700;padding:0}
+.wrap{max-width:1040px;margin:auto;padding:16px}
+button{font:inherit;font-weight:600;cursor:pointer;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:12px;padding:8px 14px;transition:.15s}
+button:hover:not(:disabled){border-color:var(--acc)}button:disabled{opacity:.35;cursor:default}
+.btn{background:var(--acc);color:#fff;border-color:var(--acc)}
+.panel{margin-top:22px}
+h2{margin:0 0 12px;font-size:17px;letter-spacing:-.2px}
+.hero{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:14px;position:relative;min-height:128px;box-shadow:var(--sh)}
+.card .c{position:absolute;top:12px;left:14px;font-size:22px;line-height:1}
+.card .lbl{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--mute);font-weight:600;margin-left:28px;display:block;padding-top:4px}
+.card .big{font:800 42px "Playfair Display",serif;text-align:center;margin-top:12px;letter-spacing:-1px}
+.card .sub{text-align:center;font-size:12px;color:var(--mute)}
+.card.lead{background:linear-gradient(145deg,#12905a,#08432a);color:#fff;border:0}.card.lead .lbl,.card.lead .sub{color:#d6f0e0}
+.card.lead .M,.card.lead .H{color:#fff}
+.H{color:var(--red)}.M{color:var(--ink)}
+.tw{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--sh)}
+table{border-collapse:collapse;width:100%;white-space:nowrap}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(--mute);text-align:left;padding:10px 12px}
+td{padding:10px 12px;border-top:1px solid var(--line)}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+.chip{display:inline-block;border-radius:99px;padding:2px 10px;font-size:12px;font-weight:600;background:var(--chip);color:var(--mute)}
+.chip.c{background:#0f7a4520;color:var(--good)}.chip.p{background:#c8961a28;color:var(--gold)}
+.win{color:var(--good);font-weight:700}.pen-tag{color:var(--red);font-weight:700}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.mute{color:var(--mute);font-size:13px}
+.whatif{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.whatif div{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:var(--sh)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:10px}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px;cursor:pointer;box-shadow:var(--sh);transition:.15s}
+.tile:hover{transform:translateY(-2px);border-color:var(--acc)}
+.tile .ln{display:flex;justify-content:space-between;margin-top:6px;font-variant-numeric:tabular-nums}
+.tile .ft{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);font-size:12px;color:var(--mute)}
+.nav{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.nav>div{display:flex;align-items:center;gap:10px}
+.live{position:sticky;top:calc(env(safe-area-inset-top,0px) + 54px);z-index:8;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0;padding:6px 0;background:var(--bg)}
+.lp{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:8px 14px;display:flex;justify-content:space-between;align-items:center;font-weight:600;box-shadow:var(--sh)}
+.lp b{font:800 26px "Playfair Display",serif}
+.nines{display:grid;gap:16px;grid-template-columns:1fr}
+@media(min-width:800px){.nines{grid-template-columns:1fr 1fr;align-items:start}}
+.holes{display:grid;gap:8px}
+.hole{display:grid;grid-template-columns:30px 1fr 1fr;gap:8px 10px;align-items:start;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:10px 12px;box-shadow:var(--sh)}
+.hn{font:800 18px "Playfair Display",serif;color:var(--acc);padding-top:20px}
+.pl{display:flex;flex-direction:column;gap:3px}.pl span{font-size:11px;color:var(--mute);font-weight:600}
+.sc{width:100%;padding:9px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);font:700 18px Inter;text-align:center}
+.sc:focus{outline:2px solid var(--acc);border-color:transparent}
+.pl small{text-align:center;font-size:12px}.pl small:empty{display:none}.pl small::before{content:"net ";color:var(--mute);font-weight:400}
+.out{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.seg{display:flex;align-items:center;gap:4px;background:var(--chip);padding:3px;border-radius:12px}
+.seg i{font-style:normal;font-size:11px;color:var(--mute);padding:0 6px}
+.of{padding:4px 10px;font-size:13px;border:0;background:transparent;color:var(--mute)}
+.of.on{background:var(--panel);color:var(--ink);box-shadow:var(--sh)}
+.res{font-size:13px;text-align:right}
+.hole.sub{grid-template-columns:1.3fr 1fr 1fr 1.4fr;align-items:center;background:var(--chip);box-shadow:none}
+.hole.sub .n{text-align:center;font:700 16px Inter}
+.fin{margin-top:16px;background:linear-gradient(145deg,#12905a,#08432a);color:#fff;border:0}.fin .n{font-size:22px}
+main{display:block}
+tr.go{cursor:pointer}tr.go:hover td{background:var(--chip)}
+tr.tot td{font-weight:700;background:var(--chip)}tr.fin td{background:var(--acc);color:#fff}tr.fin .win,tr.fin .pen-tag{color:#fff}
+td.hn{padding-top:10px}td .sc{width:76px;padding:7px}
+.res{white-space:nowrap}
+</style></head><body>
+<div class="bar"><div><div class="brand">⛳ Six-Card Golf <i>♠♥♦♣</i></div>
+<div class="pen"><label for="pv">Penalty</label><button id="pm" aria-label="Decrease">−</button><input id="pv" type="number" min="0" inputmode="numeric"><button id="pp" aria-label="Increase">+</button></div></div></div>
+<div class="wrap">
+<main id="main"></main>
+<p class="mute" style="text-align:center">Kings 0 · Aces 1 · 2–10 face value · Jacks &amp; Queens 10 · matching column 0 · Out-first player who doesn’t win the hole takes the penalty (ties: none) <br><button id="rs" style="margin-top:8px">Reset to original workbook data</button></p>
+</div>
+<script>
+const SEED={"1":[[29,21,0],[34,22,0],[14,24,0],[23,14,1],[11,30,0],[17,23,0],[21,4,1],[6,10,1],[22,17,1],[7,13,0],[10,13,0],[16,23,0],[22,0,1],[5,6,1],[12,12,0],[5,12,0],[10,17,1],[16,10,0]],"2":[[8,18,1],[1,3,0],[13,24,0],[8,14,0],[13,14,0],[6,9,0],[16,18,1],[14,11,1],[6,0,0],[2,11,1],[14,16,0],[13,13,1],[10,7,1],[2,2,1],[2,12,0],[12,24,0],[13,16,1],[12,5,1]],"3":[[6,1,1],[13,6,0],[9,10,0],[11,16,0],[3,21,0],[10,11,0],[7,11,1],[1,11,0],[13,6,0],[9,19,0],[11,27,0],[19,12,1],[15,15,0],[10,16,1],[6,8,1],[17,21,1],[19,7,1],[14,9,1]],"4":[[4,8,1],[18,19,1],[21,9,1],[14,18,1],[11,25,0],[24,6,0],[16,19,1],[17,12,0],[16,3,0],[10,15,0],[5,5,1],[7,15,1],[10,1,0],[11,7,1],[19,4,1],[10,9,0],[15,6,0],[0,3,1]],"5":[[9,18,1],[13,12,0],[6,13,0],[10,6,0],[5,10,1],[16,13,0],[3,15,1],[14,4,1],[21,16,0],[1,21,0],[20,7,0],[9,7,0],[31,8,0],[22,11,1],[6,26,0],[11,5,1],[11,22,0],[4,20,0]],"6":[[18,9,1],[14,22,0],[5,5,0],[19,16,1],[13,24,0],[20,7,0],[10,6,1],[5,18,0],[1,5,1],[12,17,0],[18,4,1],[30,13,1],[10,11,0],[8,27,0],[14,13,0],[23,3,1],[13,15,0],[9,24,0]],"7":[[14,12,0],[15,11,1],[10,19,0],[3,13,0],[14,12,0],[6,10,0],[9,11,0],[4,22,0],[1,4,0],[20,3,1],[21,17,1],[10,6,0],[3,5,0],[10,3,1],[0,6,0],[11,17,0],[3,0,0],[11,14,0]],"8":[[12,11,1],[7,5,0],[0,17,0],[16,15,1],[11,23,0],[22,13,1],[8,7,1],[17,5,1],[3,10,0],[5,7,0],[11,4,0],[12,3,0],[3,12,0],[5,17,0],[11,20,1],[8,11,1],[24,12,1],[1,10,0]],"9":[[18,5,1],[14,8,0],[25,19,1],[12,26,0],[13,4,0],[11,8,1],[0,4,0],[14,22,0],[15,13,1],[1,27,0],[6,7,1],[3,14,1],[5,4,0],[23,10,1],[5,17,0],[7,18,0],[3,29,0],[23,6,1]],"10":[[12,11,0],[10,18,0],[17,12,1],[7,17,1],[5,1,0],[22,13,1],[9,8,0],[15,10,1],[19,13,0],[10,6,1],[14,15,1],[7,21,0],[4,12,0],[20,5,1],[15,13,0],[8,18,1],[22,13,0],[8,12,0]],"11":[[33,9,1],[13,8,0],[1,10,1],[12,19,0],[5,7,0],[12,21,0],[10,22,0],[5,7,1],[10,7,1],[13,14,0],[0,8,1],[15,13,1],[17,8,0],[17,21,1],[15,9,0],[11,11,1],[14,3,1],[1,15,0]],"12":[[7,17,0],[6,14,0],[14,6,0],[0,5,1],[10,7,1],[10,7,0],[28,14,1],[5,15,0],[5,5,0],[1,16,0],[15,17,0],[1,5,0],[20,17,1],[9,12,1],[3,14,0],[7,9,0],[3,8,0],[0,0,0]],"13":[[8,13,0],[14,6,1],[9,0,1],[16,6,1],[12,11,0],[4,6,1],[4,17,0],[12,9,1],[16,17,1],[18,12,1],[15,16,0],[10,21,0],[17,10,0],[24,14,1],[5,13,1],[7,0,0],[10,4,0],[6,4,1]],"14":[[6,22,0],[11,8,1],[12,10,0],[22,10,0],[14,0,0],[0,20,0],[8,10,0],[5,8,1],[13,29,0],[9,24,0],[21,8,1],[13,12,1],[0,21,0],[4,9,0],[4,7,0],[3,10,0],[5,14,0],[17,11,1]],"15":[[0,9,0],[24,14,1],[10,20,0],[4,22,0],[4,12,0],[8,7,1],[26,14,1],[1,9,1],[4,1,0],[7,29,0],[3,8,0],[6,0,1],[0,10,0],[22,14,1],[17,8,0],[15,10,1],[8,19,0],[9,5,1]]};
+const NM=['Michael','Hannah'],SU=['♠','♥'];
+let S=null,view='summary',ck=null;
+try{S=JSON.parse(localStorage.getItem('golf6v2'))}catch(e){}
+if(!S||!S.rounds)S={pen:5,rounds:JSON.parse(JSON.stringify(SEED))};
+const save=()=>{try{localStorage.setItem('golf6v2',JSON.stringify(S))}catch(e){}};
+const $=s=>document.querySelector(s);
+const keys=()=>Object.keys(S.rounds).map(Number).sort((a,b)=>a-b);
+function hole(h,pen){if(!h||h[0]==null||h[1]==null)return{done:false};const[m,x,o]=h,w=m<x?0:x<m?1:-1,p=(o!=null&&w>=0&&w!==o)?o:-1,t=[m,x];if(p>=0)t[p]+=pen;return{done:true,w,p,t,o}}
+function rnd(n,pen=S.pen){const r={f:[0,0],b:[0,0],won:[0,0],pen:[0,0],filled:0};
+S.rounds[n].forEach((h,i)=>{if(h){if(h[0]!=null)r.filled++;if(h[1]!=null)r.filled++}const c=hole(h,pen);if(!c.done)return;const k=i<9?'f':'b';r[k][0]+=c.t[0];r[k][1]+=c.t[1];if(c.w>=0)r.won[c.w]++;if(c.p>=0)r.pen[c.p]++});
+r.t=[r.f[0]+r.b[0],r.f[1]+r.b[1]];r.st=r.filled==0?'Not Started':r.filled<36?'In Progress':'Completed';return r}
+function series(pen=S.pen){const s={t:[0,0],won:[0,0],pen:[0,0],rw:[0,0],tie:0,best:[999,999],done:0};
+keys().forEach(n=>{const r=rnd(n,pen);for(let p=0;p<2;p++){s.t[p]+=r.t[p];s.won[p]+=r.won[p];s.pen[p]+=r.pen[p]}
+if(r.st=='Completed'){s.done++;if(r.t[0]<r.t[1])s.rw[0]++;else if(r.t[1]<r.t[0])s.rw[1]++;else s.tie++;for(let p=0;p<2;p++)s.best[p]=Math.min(s.best[p],r.t[p])}});return s}
+const lead=t=>t[0]<t[1]?`${NM[0]} −${t[1]-t[0]}`:t[1]<t[0]?`${NM[1]} −${t[0]-t[1]}`:'TIE';
+const stc=s=>`<span class="chip ${s=='Completed'?'c':s=='In Progress'?'p':''}">${s}</span>`;
+function summary(){const s=series(),b=series(5),L=s.t[0]==s.t[1]?-1:s.t[0]<s.t[1]?0:1,d=s.t[0]-b.t[0],e=s.t[1]-b.t[1];
+const pc=p=>`<div class="card ${L==p?'lead':''}"><span class="c ${p?'H':'M'}">${SU[p]}</span><span class="lbl">${NM[p]}${L==p?' 🏆':''}</span><div class="big ${p?'H':'M'}">${s.t[p]}</div><div class="sub">cumulative pts</div></div>`;
+const sg=n=>n>0?'+'+n:n;
+let rows=keys().map(n=>{const r=rnd(n);return`<tr class="go" data-r="${n}"><td><b>Round ${n}</b></td><td class="n ${r.filled&&r.t[0]<r.t[1]?'win':''}">${r.t[0]}</td><td class="n ${r.filled&&r.t[1]<r.t[0]?'win':''}">${r.t[1]}</td><td>${r.filled?lead(r.t):'—'}</td><td>${stc(r.st)}</td><td class="n">${r.pen[0]} / ${r.pen[1]}</td><td class="n">${r.won[0]} / ${r.won[1]}</td></tr>`}).join('');
+const win=(a,b,l)=>a<b?`${NM[0]} (${l})`:b<a?`${NM[1]} (${l})`:'Even';
+return`<section class="panel" style="margin-top:6px"><div class="row" style="margin-bottom:10px"><h2 style="margin:0">Series Leader</h2><span class="mute">${s.done} rounds completed · ${s.done*18} holes</span></div>
+<div class="hero"><div class="card ${L<0?'lead':''}"><span class="c">♦</span><span class="lbl">Leader</span><div class="big ser" style="font-size:26px;margin-top:16px">${L<0?'Tied':NM[L]+' 🏆'}</div><div class="sub">${L<0?'':'by '+Math.abs(s.t[0]-s.t[1])+' pts'}</div></div>${pc(0)}${pc(1)}
+<div class="card"><span class="c">♣</span><span class="lbl">Penalties</span><div class="big" style="font-size:28px">${s.pen[0]} – ${s.pen[1]}</div><div class="sub">worth ${S.pen} pts each<br>${NM[0]} – ${NM[1]}</div></div></div></section>
+<section class="panel"><h2>What-if: penalty value</h2><div class="whatif"><div><b>Original rule (5 pts)</b><br>${NM[0]} ${b.t[0]} · ${NM[1]} ${b.t[1]}<br><span class="mute">${lead(b.t)}</span></div>
+<div><b>Now at ${S.pen} pts</b><br>${NM[0]} ${s.t[0]} (${sg(d)}) · ${NM[1]} ${s.t[1]} (${sg(e)})<br><span class="mute">${lead(s.t)}${(lead(s.t)!=lead(b.t)&&b.t[0]!=b.t[1])?' — the result changes!':''}</span></div></div>
+<p class="mute" style="margin:8px 0 0">Change the penalty in the header and every hole, round and the series re-scores instantly.</p></section>
+<section class="panel"><div class="row"><h2 style="margin:0">Rounds</h2><button class="btn" id="nw">＋ New Scorecard</button></div><div class="tw"><table><tr><th>Round</th><th class="n">♠ ${NM[0]}</th><th class="n">♥ ${NM[1]}</th><th>Winner / Margin</th><th>Status</th><th class="n">Penalties M / H</th><th class="n">Holes Won M / H</th></tr>${rows}<tr class="tot"><td>Cumulative</td><td class="n">${s.t[0]}</td><td class="n">${s.t[1]}</td><td>${lead(s.t)}</td><td>${s.done} rounds</td><td class="n">${s.pen[0]} / ${s.pen[1]}</td><td class="n">${s.won[0]} / ${s.won[1]}</td></tr></table></div></section>
+<section class="panel"><h2>Series Performance</h2><div class="tw"><table><tr><th>Metric</th><th class="n">${NM[0]}</th><th class="n">${NM[1]}</th><th>Advantage</th></tr>
+<tr><td>Scoring average</td><td class="n">${(s.t[0]/(s.done||1)).toFixed(1)}</td><td class="n">${(s.t[1]/(s.done||1)).toFixed(1)}</td><td>${win(s.t[0],s.t[1],'lower')}</td></tr>
+<tr><td>Best single round</td><td class="n">${s.best[0]<999?s.best[0]:'—'}</td><td class="n">${s.best[1]<999?s.best[1]:'—'}</td><td>${win(s.best[0],s.best[1],'lower')}</td></tr>
+<tr><td>Holes won</td><td class="n">${s.won[0]}</td><td class="n">${s.won[1]}</td><td>${win(s.won[1],s.won[0],'more')}</td></tr>
+<tr><td>Penalties</td><td class="n">${s.pen[0]} (${s.pen[0]*S.pen} pts)</td><td class="n">${s.pen[1]} (${s.pen[1]*S.pen} pts)</td><td>${s.pen[0]==s.pen[1]?'Even':NM[s.pen[0]>s.pen[1]?0:1]+' +'+Math.abs(s.pen[0]-s.pen[1])*S.pen+' pts'}</td></tr>
+<tr><td>Rounds won</td><td class="n">${s.rw[0]}</td><td class="n">${s.rw[1]}</td><td>${win(s.rw[1],s.rw[0],'more')}${s.tie?' · '+s.tie+' tied':''}</td></tr></table></div></section>`}
+function roundView(n){const hs=S.rounds[n];
+const row=i=>{const h=hs[i]||[null,null,null],v=x=>x==null?'':x;return`<tr><td class="hn">${i+1}</td>`+[0,1].map(p=>`<td><input class="sc" type="number" min="0" inputmode="numeric" data-i="${i}" data-p="${p}" value="${v(h[p])}" aria-label="${NM[p]} hole ${i+1}"></td>`).join('')+`<td><div class="seg">${[0,1].map(p=>`<button class="of" data-i="${i}" data-o="${p}" title="${NM[p]} went out first">${SU[p]}</button>`).join('')}</div></td><td class="n" id="a${i}0"></td><td class="n" id="a${i}1"></td><td class="res" id="o${i}"></td></tr>`};
+const sub=(l,k,c='tot')=>`<tr class="${c}"><td colspan="4">${l}</td><td class="n" id="${k}0"></td><td class="n" id="${k}1"></td><td id="${k}d"></td></tr>`;
+let t='';for(let i=0;i<9;i++)t+=row(i);t+=sub('Front 9','f');for(let i=9;i<18;i++)t+=row(i);t+=sub('Back 9','b')+sub('Official Round Total','t','tot fin');
+const ks=keys(),ix=ks.indexOf(n);
+return`<div class="nav"><button id="bk">← Series</button><div><button data-r="${ks[ix-1]}" ${ix?'':'disabled'}>‹</button><b>Round ${n}</b><button data-r="${ks[ix+1]}" ${ix<ks.length-1?'':'disabled'}>›</button></div><span id="stt"></span></div>
+<div class="live"><div class="lp"><span class="M">♠ ${NM[0]}</span><b id="lv0"></b></div><div class="lp"><span class="H">♥ ${NM[1]}</span><b id="lv1"></b></div></div>
+<p class="mute" style="margin:0 0 12px">Enter card points per player, then tap ♠ or ♥ for who went out first. The ${S.pen}-pt penalty applies automatically when they don’t win the hole. Press Enter to jump to the next box.</p>
+<div class="tw"><table><tr><th>Hole</th><th><span class="M">♠</span> ${NM[0]}</th><th><span class="H">♥</span> ${NM[1]}</th><th>Out first</th><th class="n">${NM[0]} net</th><th class="n">${NM[1]} net</th><th>Outcome</th></tr>${t}</table></div>
+<div class="row" style="margin-top:14px"><span id="pl" class="mute"></span><button id="dl">Delete this round</button></div>`}
+function paint(n){const hs=S.rounds[n],r=rnd(n);
+hs.forEach((h,i)=>{const c=hole(h,S.pen);[0,1].forEach(p=>{const e=$('#a'+i+p);e.textContent=c.done?c.t[p]:'';e.className='n'+(c.done&&c.w==p?' win':'')+(c.done&&c.p==p?' pen-tag':'')});
+$('#o'+i).innerHTML=!c.done?'<span class="mute">—</span>':(c.w<0?`<span class="chip">Tie${c.o!=null?' ('+NM[c.o]+' out)':''}</span>`:`<b class="${c.w?'H':'M'}">${SU[c.w]} ${NM[c.w]}</b>`+(c.p>=0?` <span class="chip p">${NM[c.p]} +${S.pen} penalty</span>`:c.o==null?' <span class="mute">(pick who went out)</span>':''));
+document.querySelectorAll(`.of[data-i="${i}"]`).forEach(b=>b.classList.toggle('on',h&&h[2]==+b.dataset.o))});
+[['f',r.f],['b',r.b],['t',r.t]].forEach(([k,v])=>{$('#'+k+'0').textContent=v[0];$('#'+k+'1').textContent=v[1];$('#'+k+'d').textContent=r.filled?lead(v):''});
+$('#lv0').textContent=r.t[0];$('#lv1').textContent=r.t[1];$('#stt').innerHTML=stc(r.st)+(r.filled?` <b>${lead(r.t)}</b>`:'');
+$('#pl').textContent=`Penalties: ${NM[0]} ${r.pen[0]} (+${r.pen[0]*S.pen}) · ${NM[1]} ${r.pen[1]} (+${r.pen[1]*S.pen}) · Holes won ${r.won[0]}–${r.won[1]}`}
+function render(){$('#pv').value=S.pen;ck=null;const m=$('#main');if(view=='summary'){m.innerHTML=summary()}else{m.innerHTML=roundView(view);paint(view)}}
+const main=$('#main');
+main.addEventListener('input',e=>{const t=e.target;if(!t.classList.contains('sc'))return;const n=view,i=+t.dataset.i,p=+t.dataset.p;const h=S.rounds[n][i]||(S.rounds[n][i]=[null,null,null]);h[p]=t.value===''?null:Math.max(0,Math.floor(+t.value));save();paint(n)});
+main.addEventListener('keydown',e=>{if(e.key!=='Enter'||!e.target.classList.contains('sc'))return;e.preventDefault();const a=[...document.querySelectorAll('.sc')],i=a.indexOf(e.target);(a[i+1]||e.target).focus()});
+main.addEventListener('click',e=>{const t=e.target,g=t.closest('[data-r]'),o=t.closest('.of');
+if(o){const i=+o.dataset.i,h=S.rounds[view][i]||(S.rounds[view][i]=[null,null,null]),p=+o.dataset.o;h[2]=h[2]===p?null:p;save();paint(view)}
+else if(t.closest('#nw')){const n=Math.max(0,...keys())+1;S.rounds[n]=Array(18).fill(null);save();view=n;render();scrollTo(0,0)}
+else if(t.closest('#bk')){view='summary';render()}
+else if(t.closest('#dl')){if(ck!='d'){ck='d';t.textContent='Tap again to confirm delete'}else{delete S.rounds[view];save();view='summary';render()}}
+else if(g&&!g.disabled){view=+g.dataset.r;render();scrollTo(0,0)}});
+const setPen=v=>{S.pen=Math.max(0,Math.min(100,Math.floor(+v||0)));save();render()};
+$('#pm').onclick=()=>setPen(S.pen-1);$('#pp').onclick=()=>setPen(S.pen+1);$('#pv').onchange=e=>setPen(e.target.value);
+$('#rs').onclick=e=>{if(ck!='r'){ck='r';e.target.textContent='Tap again to erase all changes and reset'}else{S={pen:5,rounds:JSON.parse(JSON.stringify(SEED))};save();view='summary';render();e.target.textContent='Reset to original workbook data'}};
+render();
+</script></body></html>
