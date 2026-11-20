@@ -1,7 +1,17 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>⛳ Six-Card Golf · Series Scorecard</title>
+<title>Six-Card Golf</title>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#f2f5f1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#09110d" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Golf">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#f2f5f1;--panel:#fff;--ink:#0e1a13;--mute:#6b776f;--line:#e2e8e2;--acc:#0f7a45;--gold:#c8961a;--red:#e11d48;--good:#0f8a4b;--chip:#eaf0ea;--sh:0 1px 2px #0001,0 10px 28px #0000000c;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -43,8 +53,6 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
 .win{color:var(--good);font-weight:700}.pen-tag{color:var(--red);font-weight:700}
 .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
 .mute{color:var(--mute);font-size:13px}
-.whatif{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
-.whatif div{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:var(--sh)}
 .tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:10px}
 .tile{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px;cursor:pointer;box-shadow:var(--sh);transition:.15s}
 .tile:hover{transform:translateY(-2px);border-color:var(--acc)}
@@ -74,6 +82,41 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
 .hole.sub .n{text-align:center;font:700 16px Inter}
 .fin{margin-top:16px;background:linear-gradient(145deg,#12905a,#08432a);color:#fff;border:0}.fin .n{font-size:22px}
 main{display:block}
+.rule .rh{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;margin-bottom:10px}.rule h2{margin:0}
+.rule .rc{display:flex;flex-wrap:wrap;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:var(--sh)}
+.seg.big .of{font-size:14px;padding:8px 14px}
+.rule .pen{box-shadow:none}.rule .pen label{display:inline;padding:0 10px 0 4px;text-transform:none;font-size:13px}
+.rule.compact{margin-top:18px}
+sup.pb{font-size:10px;font-weight:700;color:var(--red);margin-left:2px}
+input,select,textarea{font-size:16px}
+/* actions + lock */
+.acts{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.acts .btn{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:16px 18px;border-radius:18px;font-size:18px;text-align:left;box-shadow:var(--sh)}
+.acts .btn small{font-size:12px;font-weight:500;opacity:.85}
+.acts .go2{background:var(--panel);color:var(--ink);border:2px solid var(--gold)}
+.lockb{display:flex;gap:10px;align-items:flex-start;background:var(--chip);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:0 0 12px;font-size:14px}
+td.lk{font:700 16px Inter;text-align:center;font-variant-numeric:tabular-nums}
+.stt{margin:8px 0 0;display:flex;gap:8px;align-items:center}
+@media(max-width:600px){
+ .tw table{table-layout:auto}
+ th,td{padding:7px 4px}
+ th{font-size:10px;letter-spacing:.4px}
+ .tw td .sc{width:44px;padding:7px 2px;font-size:16px}
+ .seg{padding:2px;gap:2px}.of{padding:4px 7px;font-size:13px}
+ td.hn{font-size:15px;padding-left:8px}
+ .tw td:first-child,.tw th:first-child{padding-left:10px}
+ .tw td:last-child,.tw th:last-child{padding-right:10px}
+ .acts .btn{font-size:17px;padding:14px 16px}
+ .hm{display:none}
+ .wrap{padding:12px}
+ td,th{padding:8px 6px}
+ td .sc{width:58px;padding:8px 4px}
+ .of{padding:4px 8px}
+ .card{min-height:104px;padding:12px}.card .big{font-size:32px}
+ .hero{grid-template-columns:1fr 1fr;gap:10px}
+ .nav b{font-size:15px}
+ .live{gap:8px}.lp{padding:6px 10px}.lp b{font-size:22px}
+}
 .tr{display:flex;gap:8px;align-items:center}
 .sync{border-radius:99px;padding:6px 12px;font-size:12px;font-weight:700;border:1px solid var(--line);background:var(--panel);box-shadow:var(--sh);white-space:nowrap;max-width:46vw;overflow:hidden;text-overflow:ellipsis}
 .sync::before{content:"●";margin-right:6px}
@@ -90,7 +133,7 @@ td.hn{padding-top:10px}td .sc{width:76px;padding:7px}
 .res{white-space:nowrap}
 </style></head><body>
 <div class="bar"><div><div class="brand">⛳ Six-Card Golf <i>♠♥♦♣</i></div>
-<div class="tr"><button id="sync" class="sync off" title="Google Sheet sync">Local only</button><div class="pen"><label for="pv">Penalty</label><button id="pm" aria-label="Decrease">−</button><input id="pv" type="number" min="0" inputmode="numeric"><button id="pp" aria-label="Increase">+</button></div></div></div></div>
+<div class="tr"><button id="sync" class="sync off" title="Google Sheet sync">Local only</button></div></div></div>
 <div class="wrap">
 <section id="sp" class="sp" hidden><div class="row"><h2 style="margin:0">☁️ Google Sheet sync</h2><button id="sx2" aria-label="Close">✕</button></div>
 <div id="sm" class="msg"></div>
@@ -116,73 +159,85 @@ const SEED={"1":[[29,21,0],[34,22,0],[14,24,0],[23,14,1],[11,30,0],[17,23,0],[21
 const NM=['Michael','Hannah'],SU=['♠','♥'];
 let S=null,view='summary',ck=null;
 try{S=JSON.parse(localStorage.getItem('golf6v2'))}catch(e){}
-if(!S||!S.rounds)S={pen:5,rounds:JSON.parse(JSON.stringify(SEED))};
+if(!S||!S.rounds)S={pen:5,rounds:JSON.parse(JSON.stringify(SEED))};if(S.mode!=='double')S.mode='add';
 const local=()=>{try{localStorage.setItem('golf6v2',JSON.stringify(S))}catch(e){}};
 let save=()=>{local()};
 const $=s=>document.querySelector(s);
 const keys=()=>Object.keys(S.rounds).map(Number).sort((a,b)=>a-b);
-function hole(h,pen){if(!h||h[0]==null||h[1]==null)return{done:false};const[m,x,o]=h,w=m<x?0:x<m?1:-1,p=(o!=null&&w>=0&&w!==o)?o:-1,t=[m,x];if(p>=0)t[p]+=pen;return{done:true,w,p,t,o}}
-function rnd(n,pen=S.pen){const r={f:[0,0],b:[0,0],won:[0,0],pen:[0,0],filled:0};
-S.rounds[n].forEach((h,i)=>{if(h){if(h[0]!=null)r.filled++;if(h[1]!=null)r.filled++}const c=hole(h,pen);if(!c.done)return;const k=i<9?'f':'b';r[k][0]+=c.t[0];r[k][1]+=c.t[1];if(c.w>=0)r.won[c.w]++;if(c.p>=0)r.pen[c.p]++});
+function hole(h,pen,mode){mode=mode||S.mode;if(!h||h[0]==null||h[1]==null)return{done:false};const[m,x,o]=h,w=m<x?0:x<m?1:-1,p=(o!=null&&w>=0&&w!==o)?o:-1,t=[m,x];let ex=0;if(p>=0){const b=t[p];t[p]=mode==='double'?b*2:b+pen;ex=t[p]-b}return{done:true,w,p,t,o,ex}}
+const penLbl=()=>S.mode==='double'?'score ×2':'+'+S.pen+' pts';
+const penLong=()=>S.mode==='double'?'doubles that player’s hole score':'adds '+S.pen+' pts to that player’s hole score';
+function rnd(n,pen=S.pen){const r={f:[0,0],b:[0,0],won:[0,0],pen:[0,0],pp:[0,0],filled:0};
+S.rounds[n].forEach((h,i)=>{if(h){if(h[0]!=null)r.filled++;if(h[1]!=null)r.filled++}const c=hole(h,pen);if(!c.done)return;const k=i<9?'f':'b';r[k][0]+=c.t[0];r[k][1]+=c.t[1];if(c.w>=0)r.won[c.w]++;if(c.p>=0){r.pen[c.p]++;r.pp[c.p]+=c.ex}});
 r.t=[r.f[0]+r.b[0],r.f[1]+r.b[1]];r.st=r.filled==0?'Not Started':r.filled<36?'In Progress':'Completed';return r}
-function series(pen=S.pen){const s={t:[0,0],won:[0,0],pen:[0,0],rw:[0,0],tie:0,best:[999,999],done:0};
-keys().forEach(n=>{const r=rnd(n,pen);for(let p=0;p<2;p++){s.t[p]+=r.t[p];s.won[p]+=r.won[p];s.pen[p]+=r.pen[p]}
+function series(pen=S.pen){const s={t:[0,0],won:[0,0],pen:[0,0],pp:[0,0],rw:[0,0],tie:0,best:[999,999],done:0};
+keys().forEach(n=>{const r=rnd(n,pen);for(let p=0;p<2;p++){s.t[p]+=r.t[p];s.won[p]+=r.won[p];s.pen[p]+=r.pen[p];s.pp[p]+=r.pp[p]}
 if(r.st=='Completed'){s.done++;if(r.t[0]<r.t[1])s.rw[0]++;else if(r.t[1]<r.t[0])s.rw[1]++;else s.tie++;for(let p=0;p<2;p++)s.best[p]=Math.min(s.best[p],r.t[p])}});return s}
 const lead=t=>t[0]<t[1]?`${NM[0]} −${t[1]-t[0]}`:t[1]<t[0]?`${NM[1]} −${t[0]-t[1]}`:'TIE';
 const stc=s=>`<span class="chip ${s=='Completed'?'c':s=='In Progress'?'p':''}">${s}</span>`;
-function summary(){const s=series(),b=series(5),L=s.t[0]==s.t[1]?-1:s.t[0]<s.t[1]?0:1,d=s.t[0]-b.t[0],e=s.t[1]-b.t[1];
+function summary(){const s=series(),L=s.t[0]==s.t[1]?-1:s.t[0]<s.t[1]?0:1;
 const pc=p=>`<div class="card ${L==p?'lead':''}"><span class="c ${p?'H':'M'}">${SU[p]}</span><span class="lbl">${NM[p]}${L==p?' 🏆':''}</span><div class="big ${p?'H':'M'}">${s.t[p]}</div><div class="sub">cumulative pts</div></div>`;
-const sg=n=>n>0?'+'+n:n;
-let rows=keys().map(n=>{const r=rnd(n);return`<tr class="go" data-r="${n}"><td><b>Round ${n}</b></td><td class="n ${r.filled&&r.t[0]<r.t[1]?'win':''}">${r.t[0]}</td><td class="n ${r.filled&&r.t[1]<r.t[0]?'win':''}">${r.t[1]}</td><td>${r.filled?lead(r.t):'—'}</td><td>${stc(r.st)}</td><td class="n">${r.pen[0]} / ${r.pen[1]}</td><td class="n">${r.won[0]} / ${r.won[1]}</td></tr>`}).join('');
+let rows=keys().map(n=>{const r=rnd(n);return`<tr class="go" data-r="${n}"><td><b><span class="hm">Round </span>${n}</b>${r.st==='Completed'?'':' <span class="chip p">live</span>'}</td><td class="n ${r.filled&&r.t[0]<r.t[1]?'win':''}">${r.t[0]}</td><td class="n ${r.filled&&r.t[1]<r.t[0]?'win':''}">${r.t[1]}</td><td>${r.filled?lead(r.t):'—'}</td><td class="hm">${stc(r.st)}</td><td class="n hm">${r.pen[0]} / ${r.pen[1]}</td><td class="n hm">${r.won[0]} / ${r.won[1]}</td></tr>`}).join('');
 const win=(a,b,l)=>a<b?`${NM[0]} (${l})`:b<a?`${NM[1]} (${l})`:'Even';
-return`<section class="panel" style="margin-top:6px"><div class="row" style="margin-bottom:10px"><h2 style="margin:0">Series Leader</h2><span class="mute">${s.done} rounds completed · ${s.done*18} holes</span></div>
+const ip=keys().filter(n=>rnd(n).st!=='Completed');
+return`<section class="panel acts" style="margin-top:6px">${ip.map(n=>`<button class="btn go2" data-r="${n}">▶ Continue Round ${n}<small>${S.rounds[n].filter(h=>h&&h[0]!=null&&h[1]!=null).length} of 18 holes scored</small></button>`).join('')}<button class="btn new" id="nw">＋ New Scorecard<small>Start Round ${Math.max(0,...keys(),...(S.del||[]))+1}</small></button></section>
+<section class="panel"><div class="row" style="margin-bottom:10px"><h2 style="margin:0">Series Leader</h2><span class="mute">${s.done} rounds completed · ${s.done*18} holes</span></div>
 <div class="hero"><div class="card ${L<0?'lead':''}"><span class="c">♦</span><span class="lbl">Leader</span><div class="big ser" style="font-size:26px;margin-top:16px">${L<0?'Tied':NM[L]+' 🏆'}</div><div class="sub">${L<0?'':'by '+Math.abs(s.t[0]-s.t[1])+' pts'}</div></div>${pc(0)}${pc(1)}
-<div class="card"><span class="c">♣</span><span class="lbl">Penalties</span><div class="big" style="font-size:28px">${s.pen[0]} – ${s.pen[1]}</div><div class="sub">worth ${S.pen} pts each<br>${NM[0]} – ${NM[1]}</div></div></div></section>
-<section class="panel"><h2>What-if: penalty value</h2><div class="whatif"><div><b>Original rule (5 pts)</b><br>${NM[0]} ${b.t[0]} · ${NM[1]} ${b.t[1]}<br><span class="mute">${lead(b.t)}</span></div>
-<div><b>Now at ${S.pen} pts</b><br>${NM[0]} ${s.t[0]} (${sg(d)}) · ${NM[1]} ${s.t[1]} (${sg(e)})<br><span class="mute">${lead(s.t)}${(lead(s.t)!=lead(b.t)&&b.t[0]!=b.t[1])?' — the result changes!':''}</span></div></div>
-<p class="mute" style="margin:8px 0 0">Change the penalty in the header and every hole, round and the series re-scores instantly.</p></section>
-<section class="panel"><div class="row"><h2 style="margin:0">Rounds</h2><button class="btn" id="nw">＋ New Scorecard</button></div><div class="tw"><table><tr><th>Round</th><th class="n">♠ ${NM[0]}</th><th class="n">♥ ${NM[1]}</th><th>Winner / Margin</th><th>Status</th><th class="n">Penalties M / H</th><th class="n">Holes Won M / H</th></tr>${rows}<tr class="tot"><td>Cumulative</td><td class="n">${s.t[0]}</td><td class="n">${s.t[1]}</td><td>${lead(s.t)}</td><td>${s.done} rounds</td><td class="n">${s.pen[0]} / ${s.pen[1]}</td><td class="n">${s.won[0]} / ${s.won[1]}</td></tr></table></div></section>
-<section class="panel"><h2>Series Performance</h2><div class="tw"><table><tr><th>Metric</th><th class="n">${NM[0]}</th><th class="n">${NM[1]}</th><th>Advantage</th></tr>
-<tr><td>Scoring average</td><td class="n">${(s.t[0]/(s.done||1)).toFixed(1)}</td><td class="n">${(s.t[1]/(s.done||1)).toFixed(1)}</td><td>${win(s.t[0],s.t[1],'lower')}</td></tr>
-<tr><td>Best single round</td><td class="n">${s.best[0]<999?s.best[0]:'—'}</td><td class="n">${s.best[1]<999?s.best[1]:'—'}</td><td>${win(s.best[0],s.best[1],'lower')}</td></tr>
-<tr><td>Holes won</td><td class="n">${s.won[0]}</td><td class="n">${s.won[1]}</td><td>${win(s.won[1],s.won[0],'more')}</td></tr>
-<tr><td>Penalties</td><td class="n">${s.pen[0]} (${s.pen[0]*S.pen} pts)</td><td class="n">${s.pen[1]} (${s.pen[1]*S.pen} pts)</td><td>${s.pen[0]==s.pen[1]?'Even':NM[s.pen[0]>s.pen[1]?0:1]+' +'+Math.abs(s.pen[0]-s.pen[1])*S.pen+' pts'}</td></tr>
-<tr><td>Rounds won</td><td class="n">${s.rw[0]}</td><td class="n">${s.rw[1]}</td><td>${win(s.rw[1],s.rw[0],'more')}${s.tie?' · '+s.tie+' tied':''}</td></tr></table></div></section>`}
-function roundView(n){const hs=S.rounds[n];
-const row=i=>{const h=hs[i]||[null,null,null],v=x=>x==null?'':x;return`<tr><td class="hn">${i+1}</td>`+[0,1].map(p=>`<td><input class="sc" type="number" min="0" inputmode="numeric" data-i="${i}" data-p="${p}" value="${v(h[p])}" aria-label="${NM[p]} hole ${i+1}"></td>`).join('')+`<td><div class="seg">${[0,1].map(p=>`<button class="of" data-i="${i}" data-o="${p}" title="${NM[p]} went out first">${SU[p]}</button>`).join('')}</div></td><td class="n" id="a${i}0"></td><td class="n" id="a${i}1"></td><td class="res" id="o${i}"></td></tr>`};
-const sub=(l,k,c='tot')=>`<tr class="${c}"><td colspan="4">${l}</td><td class="n" id="${k}0"></td><td class="n" id="${k}1"></td><td id="${k}d"></td></tr>`;
+<div class="card"><span class="c">♣</span><span class="lbl">Penalties</span><div class="big" style="font-size:28px">${s.pen[0]} – ${s.pen[1]}</div><div class="sub">penalty: ${penLbl()}<br>${NM[0]} – ${NM[1]}</div></div></div></section>
+${ruleCard()}
+<section class="panel"><div class="row"><h2 style="margin:0">Rounds</h2><span class="mute">🔒 completed rounds are locked</span></div><div class="tw"><table><tr><th>Round</th><th class="n">♠ <span class="hm">${NM[0]}</span></th><th class="n">♥ <span class="hm">${NM[1]}</span></th><th>Winner</th><th class="hm">Status</th><th class="n hm">Penalties M / H</th><th class="n hm">Holes Won M / H</th></tr>${rows}<tr class="tot"><td>Cumulative</td><td class="n">${s.t[0]}</td><td class="n">${s.t[1]}</td><td>${lead(s.t)}</td><td class="hm">${s.done} rounds</td><td class="n hm">${s.pen[0]} / ${s.pen[1]}</td><td class="n hm">${s.won[0]} / ${s.won[1]}</td></tr></table></div></section>
+<section class="panel"><h2>Series Performance</h2><div class="tw"><table><tr><th>Metric</th><th class="n">♠ <span class="hm">${NM[0]}</span></th><th class="n">♥ <span class="hm">${NM[1]}</span></th><th class="hm">Advantage</th></tr>
+<tr><td>Scoring average</td><td class="n">${(s.t[0]/(s.done||1)).toFixed(1)}</td><td class="n">${(s.t[1]/(s.done||1)).toFixed(1)}</td><td class="hm">${win(s.t[0],s.t[1],'lower')}</td></tr>
+<tr><td>Best single round</td><td class="n">${s.best[0]<999?s.best[0]:'—'}</td><td class="n">${s.best[1]<999?s.best[1]:'—'}</td><td class="hm">${win(s.best[0],s.best[1],'lower')}</td></tr>
+<tr><td>Holes won</td><td class="n">${s.won[0]}</td><td class="n">${s.won[1]}</td><td class="hm">${win(s.won[1],s.won[0],'more')}</td></tr>
+<tr><td>Penalties<span class="hm"> (pts added)</span></td><td class="n">${s.pen[0]} (+${s.pp[0]})</td><td class="n">${s.pen[1]} (+${s.pp[1]})</td><td class="hm">${s.pp[0]==s.pp[1]?'Even':NM[s.pp[0]<s.pp[1]?0:1]+' (fewer pts)'}</td></tr>
+<tr><td>Rounds won</td><td class="n">${s.rw[0]}</td><td class="n">${s.rw[1]}</td><td class="hm">${win(s.rw[1],s.rw[0],'more')}${s.tie?' · '+s.tie+' tied':''}</td></tr></table></div></section>`}
+let editing=null;
+const locked=n=>rnd(n).st==='Completed'&&editing!==n;
+function go(v){view=v;if(typeof v==='number'&&S.rounds[v]&&rnd(v).st!=='Completed')editing=v;else if(v!==editing)editing=null;render();scrollTo(0,0)}
+function ruleCard(compact){const d=S.mode==='double';
+return`<section class="panel rule${compact?' compact':''}"><div class="rh"><h2>⚑ Penalty Rule</h2><span class="mute">Out-first player who doesn’t win the hole: ${penLong()}</span></div>
+<div class="rc"><div class="seg big" role="radiogroup" aria-label="Penalty type"><button data-mode="add" class="of ${d?'':'on'}" role="radio" aria-checked="${!d}">＋ Add points</button><button data-mode="double" class="of ${d?'on':''}" role="radio" aria-checked="${d}">× Double score</button></div>
+${d?'<span class="mute">e.g. 12 → 24</span>':`<div class="pen"><button data-step="-1" aria-label="Decrease">−</button><input id="pv" type="number" min="0" inputmode="numeric" value="${S.pen}" aria-label="Penalty points"><button data-step="1" aria-label="Increase">+</button><label for="pv">pts</label></div>`}</div></section>`}
+function roundView(n){const hs=S.rounds[n],L=locked(n);
+const row=i=>{const h=hs[i]||[null,null,null],v=x=>x==null?'':x;return`<tr><td class="hn">${i+1}</td>`+[0,1].map(p=>L?`<td class="lk">${v(h[p])}</td>`:`<td><input class="sc" type="number" min="0" inputmode="numeric" pattern="[0-9]*" data-i="${i}" data-p="${p}" value="${v(h[p])}" aria-label="${NM[p]} hole ${i+1}"></td>`).join('')+(L?`<td class="lk"><span class="${h[2]?'H':'M'}">${h[2]==null?'—':SU[h[2]]}</span></td>`:`<td><div class="seg">${[0,1].map(p=>`<button class="of" data-i="${i}" data-o="${p}" title="${NM[p]} went out first">${SU[p]}</button>`).join('')}</div></td>`)+`<td class="n" id="a${i}0"></td><td class="n" id="a${i}1"></td><td class="res hm" id="o${i}"></td></tr>`};
+const sub=(l,k,c='tot')=>`<tr class="${c}"><td colspan="4">${l}</td><td class="n" id="${k}0"></td><td class="n" id="${k}1"></td><td class="hm" id="${k}d"></td></tr>`;
 let t='';for(let i=0;i<9;i++)t+=row(i);t+=sub('Front 9','f');for(let i=9;i<18;i++)t+=row(i);t+=sub('Back 9','b')+sub('Official Round Total','t','tot fin');
 const ks=keys(),ix=ks.indexOf(n);
-return`<div class="nav"><button id="bk">← Series</button><div><button data-r="${ks[ix-1]}" ${ix?'':'disabled'}>‹</button><b>Round ${n}</b><button data-r="${ks[ix+1]}" ${ix<ks.length-1?'':'disabled'}>›</button></div><span id="stt"></span></div>
+return`<div class="nav"><button id="bk">← Series</button><div><button data-r="${ks[ix-1]}" ${ix?'':'disabled'} aria-label="Previous round">‹</button><b>Round ${n}</b><button data-r="${ks[ix+1]}" ${ix<ks.length-1?'':'disabled'} aria-label="Next round">›</button></div></div><div id="stt" class="stt"></div>
 <div class="live"><div class="lp"><span class="M">♠ ${NM[0]}</span><b id="lv0"></b></div><div class="lp"><span class="H">♥ ${NM[1]}</span><b id="lv1"></b></div></div>
-<p class="mute" style="margin:0 0 12px">Enter card points per player, then tap ♠ or ♥ for who went out first. The ${S.pen}-pt penalty applies automatically when they don’t win the hole. Press Enter to jump to the next box.</p>
-<div class="tw"><table><tr><th>Hole</th><th><span class="M">♠</span> ${NM[0]}</th><th><span class="H">♥</span> ${NM[1]}</th><th>Out first</th><th class="n">${NM[0]} net</th><th class="n">${NM[1]} net</th><th>Outcome</th></tr>${t}</table></div>
-<div class="row" style="margin-top:14px"><span id="pl" class="mute"></span><button id="dl">Delete this round</button></div>`}
+${L?`<div class="lockb">🔒 <div><b>This round is complete and locked.</b><br><span class="mute">Past scores can only be changed in the Google Sheet (“Golf App Data” tab) — the app picks up the change automatically.</span></div></div>`:`<p class="mute" style="margin:0 0 10px">Enter card points per player, then tap ♠ or ♥ for who went out first. Penalties apply automatically. <b id="hint"></b></p>`}
+<div class="tw"><table><tr><th>#</th><th><span class="M">♠</span> <span class="hm">${NM[0]}</span></th><th><span class="H">♥</span> <span class="hm">${NM[1]}</span></th><th>Out</th><th class="n"><span class="M">♠</span> net</th><th class="n"><span class="H">♥</span> net</th><th class="hm">Outcome</th></tr>${t}</table></div>
+<div class="row" style="margin-top:14px"><span id="pl" class="mute"></span>${L?'':'<button id="dl">Delete this round</button>'}</div>${ruleCard(true)}`}
 function paint(n){const hs=S.rounds[n],r=rnd(n);
-hs.forEach((h,i)=>{const c=hole(h,S.pen);[0,1].forEach(p=>{const e=$('#a'+i+p);e.textContent=c.done?c.t[p]:'';e.className='n'+(c.done&&c.w==p?' win':'')+(c.done&&c.p==p?' pen-tag':'')});
-$('#o'+i).innerHTML=!c.done?'<span class="mute">—</span>':(c.w<0?`<span class="chip">Tie${c.o!=null?' ('+NM[c.o]+' out)':''}</span>`:`<b class="${c.w?'H':'M'}">${SU[c.w]} ${NM[c.w]}</b>`+(c.p>=0?` <span class="chip p">${NM[c.p]} +${S.pen} penalty</span>`:c.o==null?' <span class="mute">(pick who went out)</span>':''));
-document.querySelectorAll(`.of[data-i="${i}"]`).forEach(b=>b.classList.toggle('on',h&&h[2]==+b.dataset.o))});
+hs.forEach((h,i)=>{const c=hole(h,S.pen);[0,1].forEach(p=>{const e=$('#a'+i+p);e.innerHTML=c.done?c.t[p]+(c.p==p?`<sup class="pb">${S.mode==='double'?'×2':'+'+S.pen}</sup>`:''):'';e.className='n'+(c.done&&c.w==p?' win':'')+(c.done&&c.p==p?' pen-tag':'')});
+$('#o'+i).innerHTML=!c.done?'<span class="mute">—</span>':(c.w<0?`<span class="chip">Tie${c.o!=null?' ('+NM[c.o]+' out)':''}</span>`:`<b class="${c.w?'H':'M'}">${SU[c.w]} ${NM[c.w]}</b>`+(c.p>=0?` <span class="chip p">${NM[c.p]} ${S.mode==='double'?'×2':'+'+S.pen} penalty</span>`:c.o==null?' <span class="mute">(pick who went out)</span>':''));
+document.querySelectorAll(`.of[data-i="${i}"]`).forEach(b=>b.classList.toggle('on',!!h&&h[2]==+b.dataset.o))});
 [['f',r.f],['b',r.b],['t',r.t]].forEach(([k,v])=>{$('#'+k+'0').textContent=v[0];$('#'+k+'1').textContent=v[1];$('#'+k+'d').textContent=r.filled?lead(v):''});
-$('#lv0').textContent=r.t[0];$('#lv1').textContent=r.t[1];$('#stt').innerHTML=stc(r.st)+(r.filled?` <b>${lead(r.t)}</b>`:'');
-$('#pl').textContent=`Penalties: ${NM[0]} ${r.pen[0]} (+${r.pen[0]*S.pen}) · ${NM[1]} ${r.pen[1]} (+${r.pen[1]*S.pen}) · Holes won ${r.won[0]}–${r.won[1]}`}
-function render(){$('#pv').value=S.pen;ck=null;const m=$('#main');if(view=='summary'){m.innerHTML=summary()}else{m.innerHTML=roundView(view);paint(view)}}
+const hn=$('#hint');if(hn)hn.textContent=r.st==='Completed'?'All 18 holes are in — check them now, this round locks when you leave it.':'';$('#lv0').textContent=r.t[0];$('#lv1').textContent=r.t[1];$('#stt').innerHTML=stc(r.st)+(r.filled?` <b>${lead(r.t)}</b>`:'');
+$('#pl').textContent=`Penalties: ${NM[0]} ${r.pen[0]} (+${r.pp[0]} pts) · ${NM[1]} ${r.pen[1]} (+${r.pp[1]} pts) · Holes won ${r.won[0]}–${r.won[1]}`}
+function render(){ck=null;const m=$('#main');if(view=='summary'){m.innerHTML=summary()}else{m.innerHTML=roundView(view);paint(view)}}
 const main=$('#main');
-main.addEventListener('input',e=>{const t=e.target;if(!t.classList.contains('sc'))return;const n=view,i=+t.dataset.i,p=+t.dataset.p;const h=S.rounds[n][i]||(S.rounds[n][i]=[null,null,null]);h[p]=t.value===''?null:Math.max(0,Math.floor(+t.value));save();paint(n)});
+main.addEventListener('input',e=>{const t=e.target;if(!t.classList.contains('sc')||locked(view))return;const n=view,i=+t.dataset.i,p=+t.dataset.p;const h=S.rounds[n][i]||(S.rounds[n][i]=[null,null,null]);h[p]=t.value===''?null:Math.max(0,Math.floor(+t.value));save();paint(n)});
 main.addEventListener('keydown',e=>{if(e.key!=='Enter'||!e.target.classList.contains('sc'))return;e.preventDefault();const a=[...document.querySelectorAll('.sc')],i=a.indexOf(e.target);(a[i+1]||e.target).focus()});
-main.addEventListener('click',e=>{const t=e.target,g=t.closest('[data-r]'),o=t.closest('.of');
-if(o){const i=+o.dataset.i,h=S.rounds[view][i]||(S.rounds[view][i]=[null,null,null]),p=+o.dataset.o;h[2]=h[2]===p?null:p;save();paint(view)}
-else if(t.closest('#nw')){const n=Math.max(0,...keys())+1;S.rounds[n]=Array(18).fill(null);S.del=(S.del||[]).filter(x=>x!==n);save();view=n;render();scrollTo(0,0)}
-else if(t.closest('#bk')){view='summary';render()}
-else if(t.closest('#dl')){if(ck!='d'){ck='d';t.textContent='Tap again to confirm delete'}else{delete S.rounds[view];S.del=(S.del||[]).filter(x=>x!==view).concat([view]);save();view='summary';render()}}
-else if(g&&!g.disabled){view=+g.dataset.r;render();scrollTo(0,0)}});
-const setPen=v=>{S.pen=Math.max(0,Math.min(100,Math.floor(+v||0)));save();render()};
-$('#pm').onclick=()=>setPen(S.pen-1);$('#pp').onclick=()=>setPen(S.pen+1);$('#pv').onchange=e=>setPen(e.target.value);
-$('#rs').onclick=e=>{if(ck!='r'){ck='r';e.target.textContent='Tap again to erase all changes and reset'}else{S={pen:5,rounds:JSON.parse(JSON.stringify(SEED)),del:[]};save();view='summary';render();e.target.textContent='Reset to original workbook data'}};
+main.addEventListener('click',e=>{const t=e.target,g=t.closest('[data-r]'),o=t.closest('.of[data-i]');
+if(o&&!locked(view)){const i=+o.dataset.i,h=S.rounds[view][i]||(S.rounds[view][i]=[null,null,null]),p=+o.dataset.o;h[2]=h[2]===p?null:p;save();paint(view)}
+else if(t.closest('#nw')){const n=Math.max(0,...keys(),...(S.del||[]))+1;S.rounds[n]=Array(18).fill(null);S.del=(S.del||[]).filter(x=>x!==n);save();go(n)}
+else if(t.closest('#bk')){go('summary')}
+else if(t.closest('#dl')&&!locked(view)){if(ck!='d'){ck='d';t.textContent='Tap again to confirm delete'}else{delete S.rounds[view];S.del=(S.del||[]).filter(x=>x!==view).concat([view]);save();go('summary')}}
+else if(g&&!g.disabled){go(+g.dataset.r)}});
+const keepY=f=>{const y=scrollY;f();scrollTo(0,y)};
+const setPen=v=>{S.pen=Math.max(0,Math.min(100,Math.floor(+v||0)));save();keepY(render)};
+const setMode=m=>{if(S.mode===m)return;S.mode=m;save();keepY(render)};
+main.addEventListener('click',e=>{const m=e.target.closest('[data-mode]'),st=e.target.closest('[data-step]');if(m)setMode(m.dataset.mode);else if(st)setPen(S.pen+ +st.dataset.step)});
+main.addEventListener('change',e=>{if(e.target.id==='pv')setPen(e.target.value)});
+$('#rs').onclick=e=>{if(ck!='r'){ck='r';e.target.textContent='Tap again to erase all changes and reset'}else{S={pen:5,mode:'add',rounds:JSON.parse(JSON.stringify(SEED)),del:[]};save();view='summary';render();e.target.textContent='Reset to original workbook data'}};
 render();
 
 /* ---------- Google Sheet sync: Apps Script web app (same approach as the PUBG stats project) ---------- */
 const TAB='Golf App Data';
-const HEAD=['Round','Hole','Michael','Hannah','Out First','Winner','Penalty On','Penalty Pts','Michael Net','Hannah Net','Deleted'];
+const HEAD=['Round','Hole','Michael','Hannah','Out First','Winner','Penalty On','Penalty Pts','Michael Net','Hannah Net','Deleted','Penalty Mode'];
+const MODE_TXT={add:'Add points',double:'Double score'};
 const GAS=`var TOKEN = '__TOKEN__';
 var SHEET_ID = ''; // empty = the spreadsheet this script is attached to
 var TAB = '${TAB}'; // the app keeps its data on this tab (created if missing)
@@ -297,16 +352,16 @@ function drawChip(){if(!gs.url)return pill('warn','Connect Sheet','Tap to connec
  pill('busy','Connecting…')}
 save=()=>{local();if(!gs.url)return;dirty++;st.set(DTK,String(dirty));drawChip();clearTimeout(saveT);saveT=setTimeout(gsPush,1000)};
 function rowsOut(){const out=[];keys().forEach(n=>{for(let i=0;i<18;i++){const h=S.rounds[n][i],c=hole(h,S.pen),v=x=>x==null?'':x;
- out.push([n,i+1,v(h&&h[0]),v(h&&h[1]),h&&h[2]!=null?NM[h[2]]:'',c.done?(c.w<0?'Tie':NM[c.w]):'',c.done&&c.p>=0?NM[c.p]:'',S.pen,c.done?c.t[0]:'',c.done?c.t[1]:'',''])}});
- S.del.filter(n=>!S.rounds[n]).forEach(n=>{for(let i=0;i<18;i++)out.push([n,i+1,'','','','','','','','','yes'])});return out}
+ out.push([n,i+1,v(h&&h[0]),v(h&&h[1]),h&&h[2]!=null?NM[h[2]]:'',c.done?(c.w<0?'Tie':NM[c.w]):'',c.done&&c.p>=0?NM[c.p]:'',S.pen,c.done?c.t[0]:'',c.done?c.t[1]:'','',MODE_TXT[S.mode]])}});
+ S.del.filter(n=>!S.rounds[n]).forEach(n=>{for(let i=0;i<18;i++)out.push([n,i+1,'','','','','','','','','yes',''])});return out}
 const rkey=r=>String(r[0]).trim()+'|'+String(r[1]).trim();
-function sheetState(v){const H=(v[0]||[]).map(String),ix=k=>H.indexOf(k),R={},D=[],sk=new Set();let pen=null;
+function sheetState(v){const H=(v[0]||[]).map(String),ix=k=>H.indexOf(k),R={},D=[],sk=new Set();let pen=null,mode=null;
  v.slice(1).forEach(x=>{const n=parseInt(x[ix('Round')]),i=parseInt(x[ix('Hole')]);if(!n||!i||i>18)return;sk.add(n+'|'+i);
   if(String(x[ix('Deleted')]||'').trim().toLowerCase()==='yes'){if(!D.includes(n))D.push(n);return}
   R[n]=R[n]||Array(18).fill(null);const m=num(x[ix('Michael')]),h=num(x[ix('Hannah')]),of=String(x[ix('Out First')]||'').trim(),o=of===NM[0]?0:of===NM[1]?1:null;
-  if(m!=null||h!=null||o!=null)R[n][i-1]=[m,h,o];if(pen==null&&ix('Penalty Pts')>=0)pen=num(x[ix('Penalty Pts')])});
- return{R,D:D.filter(n=>!R[n]),pen,sk}}
-const sig=(R,D,p)=>JSON.stringify([p,Object.keys(R).map(Number).sort((a,b)=>a-b).map(n=>[n,R[n].map(h=>h&&(h[0]!=null||h[1]!=null||h[2]!=null)?h:null)]),[...D].sort((a,b)=>a-b)]);
+  if(m!=null||h!=null||o!=null)R[n][i-1]=[m,h,o];if(pen==null&&ix('Penalty Pts')>=0)pen=num(x[ix('Penalty Pts')]);if(mode==null&&ix('Penalty Mode')>=0){const t=String(x[ix('Penalty Mode')]||'').trim();if(t)mode=/double/i.test(t)?'double':'add'}});
+ return{R,D:D.filter(n=>!R[n]),pen,mode,sk}}
+const sig=(R,D,p,md)=>JSON.stringify([p,md,Object.keys(R).map(Number).sort((a,b)=>a-b).map(n=>[n,R[n].map(h=>h&&(h[0]!=null||h[1]!=null||h[2]!=null)?h:null)]),[...D].sort((a,b)=>a-b)]);
 function useJsonp(){gsMode='jsonp'}
 async function gsJson(r){let j;try{j=await r.json()}catch(e){throw new Error('unexpected reply. Deploy the script as a web app that Anyone can access')}if(!j.ok)throw new Error(j.error||'rejected');return j}
 function jsonp(url,ms){return new Promise((res,rej)=>{const cb='__gs'+Date.now().toString(36)+Math.random().toString(36).slice(2,7),sc=document.createElement('script');let done=false;
@@ -330,14 +385,14 @@ function formPost(body){return new Promise((res,rej)=>{const n='gsF'+Date.now().
  setTimeout(()=>{if(!sent){sent=true;fm.submit()}},300)})}
 async function gsSend(body){try{const j=await gsJson(await fetch(gs.url,{method:'POST',body:JSON.stringify(body)}));gsMode='fetch';return j}catch(e){if(!(e instanceof TypeError))throw e}return formPost(body)}
 const gsValues=async()=>(await gsGet('token='+encodeURIComponent(gs.token)+'&t='+Date.now())).values||[];
-function adopt(x){S.rounds=x.R;S.del=x.D;if(x.pen!=null)S.pen=x.pen;local();if(view!=='summary'&&!S.rounds[view])view='summary';
+function adopt(x){S.rounds=x.R;S.del=x.D;if(x.pen!=null)S.pen=x.pen;if(x.mode)S.mode=x.mode;local();if(view!=='summary'&&!S.rounds[view])view='summary';
  const ae=document.activeElement,fi=ae&&ae.classList&&ae.classList.contains('sc')?[ae.dataset.i,ae.dataset.p]:null;render();
  if(fi){const e=document.querySelector(`.sc[data-i="${fi[0]}"][data-p="${fi[1]}"]`);if(e)e.focus()}}
 async function gsRead(d0,afterPush){const x=sheetState(await gsValues()),out=rowsOut(),lk=out.map(rkey);
  if(afterPush){const miss=lk.filter(k=>!x.sk.has(k)&&!known.has(k)).length;if(miss)throw new Error(miss+' hole row'+(miss>1?'s':'')+' did not reach the sheet')}
  const gone=new Set(lk.filter(k=>!x.sk.has(k)&&known.has(k)).map(k=>k.split('|')[0])).size;
  known=x.sk;st.set(KNK,JSON.stringify([...known]));
- const changed=x.sk.size>0&&sig(x.R,x.D,x.pen==null?S.pen:x.pen)!==sig(S.rounds,S.del.filter(n=>!S.rounds[n]),S.pen);
+ const changed=x.sk.size>0&&sig(x.R,x.D,x.pen==null?S.pen:x.pen,x.mode||S.mode)!==sig(S.rounds,S.del.filter(n=>!S.rounds[n]),S.pen,S.mode);
  if(changed&&dirty===d0){adopt(x);msg(gone?'Rows deleted in the Google Sheet were removed here too.':afterPush?'':'Loaded the latest scores from your Google Sheet.','ok')}
  return changed}
 async function gsPush(){if(!gs.url||gsState==='choose'||pushing)return;pushing=true;gsState='syncing';drawChip();const d0=dirty;
