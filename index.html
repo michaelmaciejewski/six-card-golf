@@ -281,7 +281,7 @@ const PRESET_GS={url:'https://script.google.com/macros/s/AKfycbzsY-OyTut6QwtcAzU
 let gs=(()=>{try{const s=JSON.parse(st.get(GSK)||'{}')||{};return PRESET_GS.url?{...PRESET_GS}:(s.url?s:{})}catch(e){return PRESET_GS.url?{...PRESET_GS}:{}}})();
 function fromHash(){const h=new URLSearchParams(location.hash.slice(1));if(!(h.get('gs')&&h.get('t')))return false;gs={url:h.get('gs'),token:h.get('t')};st.set(GSK,JSON.stringify(gs));history.replaceState(null,'',location.pathname+location.search);return true}
 fromHash();
-let gsState=gs.url?'idle':'none',gsLast=0,gsErr='',gsMode=st.get(GMK)||'fetch',pushing=false,ticking=false,saveT=null,dirty=+(st.get(DTK)||0);
+st.del(GMK);let gsState=gs.url?'idle':'none',gsLast=0,gsErr='',gsMode='fetch',pushing=false,ticking=false,saveT=null,dirty=+(st.get(DTK)||0);
 let known=new Set((()=>{try{return JSON.parse(st.get(KNK)||'[]')}catch(e){return[]}})());
 const msg=(t,k)=>{const e=$('#sm');e.textContent=t||'';e.className='msg '+(k||'')};
 const pill=(c,t,tip)=>{const e=$('#sync');e.className='sync '+c;e.textContent=t;e.title=tip||t};
@@ -307,7 +307,7 @@ function sheetState(v){const H=(v[0]||[]).map(String),ix=k=>H.indexOf(k),R={},D=
   if(m!=null||h!=null||o!=null)R[n][i-1]=[m,h,o];if(pen==null&&ix('Penalty Pts')>=0)pen=num(x[ix('Penalty Pts')])});
  return{R,D:D.filter(n=>!R[n]),pen,sk}}
 const sig=(R,D,p)=>JSON.stringify([p,Object.keys(R).map(Number).sort((a,b)=>a-b).map(n=>[n,R[n].map(h=>h&&(h[0]!=null||h[1]!=null||h[2]!=null)?h:null)]),[...D].sort((a,b)=>a-b)]);
-function useJsonp(){if(gsMode!=='jsonp'){gsMode='jsonp';st.set(GMK,'jsonp')}}
+function useJsonp(){gsMode='jsonp'}
 async function gsJson(r){let j;try{j=await r.json()}catch(e){throw new Error('unexpected reply. Deploy the script as a web app that Anyone can access')}if(!j.ok)throw new Error(j.error||'rejected');return j}
 function jsonp(url,ms){return new Promise((res,rej)=>{const cb='__gs'+Date.now().toString(36)+Math.random().toString(36).slice(2,7),sc=document.createElement('script');let done=false;
  const end=()=>{done=true;clearTimeout(tm);try{delete window[cb]}catch(e){window[cb]=undefined}sc.remove()};
@@ -316,9 +316,10 @@ function jsonp(url,ms){return new Promise((res,rej)=>{const cb='__gs'+Date.now()
  sc.onerror=()=>{if(!done){end();rej(new Error('could not reach the sheet'))}};
  sc.onload=()=>setTimeout(()=>{if(!done){end();rej(new Error('the Apps Script needs updating. Paste the new script and deploy a new version'))}},60);
  sc.src=url+(url.includes('?')?'&':'?')+'callback='+cb;document.head.appendChild(sc)})}
-async function gsGet(qs){const u=gs.url+(gs.url.includes('?')?'&':'?')+qs;
- if(gsMode!=='jsonp'){try{return await gsJson(await fetch(u))}catch(e){if(!(e instanceof TypeError))throw e;useJsonp()}}
- const j=await jsonp(u);if(!j||!j.ok)throw new Error((j&&j.error)||'rejected');return j}
+async function gsGet(qs){const u=gs.url+(gs.url.includes('?')?'&':'?')+qs;let fe=null;
+ if(gsMode!=='jsonp'){try{return await gsJson(await fetch(u))}catch(e){if(!(e instanceof TypeError))throw e;fe=e}}
+ try{const j=await jsonp(u);if(!j||!j.ok)throw new Error((j&&j.error)||'rejected');gsMode='jsonp';return j}
+ catch(e){if(gsMode==='jsonp'&&!fe){gsMode='fetch';try{return await gsJson(await fetch(u))}catch(e2){}}gsMode='fetch';throw e}}
 function formPost(body){return new Promise((res,rej)=>{const n='gsF'+Date.now().toString(36),f=document.createElement('iframe'),fm=document.createElement('form'),inp=document.createElement('input');let sent=false,done=false;
  f.name=n;f.title='sync';f.setAttribute('aria-hidden','true');f.style.cssText='position:absolute;width:0;height:0;border:0;visibility:hidden';
  fm.method='POST';fm.action=gs.url;fm.target=n;fm.style.display='none';inp.type='hidden';inp.name='payload';inp.value=JSON.stringify(body);fm.appendChild(inp);
@@ -327,7 +328,7 @@ function formPost(body){return new Promise((res,rej)=>{const n='gsF'+Date.now().
  f.onload=()=>{if(!sent){sent=true;fm.submit();return}fin(true)};
  document.body.appendChild(fm);document.body.appendChild(f);
  setTimeout(()=>{if(!sent){sent=true;fm.submit()}},300)})}
-async function gsSend(body){if(gsMode!=='jsonp'){try{return await gsJson(await fetch(gs.url,{method:'POST',body:JSON.stringify(body)}))}catch(e){if(!(e instanceof TypeError))throw e;useJsonp()}}return formPost(body)}
+async function gsSend(body){try{const j=await gsJson(await fetch(gs.url,{method:'POST',body:JSON.stringify(body)}));gsMode='fetch';return j}catch(e){if(!(e instanceof TypeError))throw e}return formPost(body)}
 const gsValues=async()=>(await gsGet('token='+encodeURIComponent(gs.token)+'&t='+Date.now())).values||[];
 function adopt(x){S.rounds=x.R;S.del=x.D;if(x.pen!=null)S.pen=x.pen;local();if(view!=='summary'&&!S.rounds[view])view='summary';
  const ae=document.activeElement,fi=ae&&ae.classList&&ae.classList.contains('sc')?[ae.dataset.i,ae.dataset.p]:null;render();
