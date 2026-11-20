@@ -95,7 +95,9 @@ td.hn{padding-top:10px}td .sc{width:76px;padding:7px}
 <section id="sp" class="sp" hidden><div class="row"><h2 style="margin:0">☁️ Google Sheet sync</h2><button id="sx2" aria-label="Close">✕</button></div>
 <div id="sm" class="msg"></div>
 <div id="sch" class="row" hidden><button class="btn" id="cs">Use the sheet’s data</button><button id="cd">Use this device’s data</button></div>
-<ol class="mute" style="padding-left:18px;margin:8px 0">
+
+<div class="row"><button id="ss">Save to Sheet now</button><button id="sr">Reload from Sheet</button></div>
+<details style="margin-top:10px"><summary class="mute" style="cursor:pointer">Setup / use a different sheet</summary><ol class="mute" style="padding-left:18px;margin:8px 0">
 <li>In your Google Sheet open <b>Extensions → Apps Script</b>, delete what’s there, paste the script below and save.</li>
 <li><b>Deploy → New deployment → gear → Web app</b>. Execute as <b>Me</b>, Who has access <b>Anyone</b> (not “Anyone with Google account”). Approve the “unverified app” warning.</li>
 <li>Copy the <b>Web app URL</b> ending in <b>/exec</b> (not the Library URL), paste it here and tap Connect.</li>
@@ -104,8 +106,7 @@ td.hn{padding-top:10px}td .sc{width:76px;padding:7px}
 <div class="row"><input id="sk" placeholder="Token" autocomplete="off" spellcheck="false"><button id="sn">New token</button><button class="btn" id="sc">Connect</button></div>
 <details style="margin-top:10px"><summary class="mute" style="cursor:pointer">Apps Script code (token included)</summary>
 <textarea id="sg" readonly spellcheck="false" style="width:100%;height:220px;margin-top:8px;font:12px/1.4 ui-monospace,Menlo,monospace;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:10px"></textarea>
-<div class="row"><button id="sy">Copy script</button></div></details>
-<div class="row"><button id="ss">Save to Sheet now</button><button id="sr">Reload from Sheet</button><button id="sx">Copy link for another device</button><button id="sd">Disconnect</button></div>
+<div class="row"><button id="sy">Copy script</button></div></details><div class="row"><button id="sx">Copy link for another device</button><button id="sd">Disconnect</button></div>
 </section>
 <main id="main"></main>
 <p class="mute" style="text-align:center">Kings 0 · Aces 1 · 2–10 face value · Jacks &amp; Queens 10 · matching column 0 · Out-first player who doesn’t win the hole takes the penalty (ties: none) <br><button id="rs" style="margin-top:8px">Reset to original workbook data</button></p>
@@ -276,7 +277,8 @@ function doPost(e) {
 if(!Array.isArray(S.del))S.del=[];
 const st={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},del:k=>{try{localStorage.removeItem(k)}catch(e){}}};
 const GSK='golf6gs',KNK='golf6known',GMK='golf6mode',DTK='golf6dirty';
-let gs=(()=>{try{return JSON.parse(st.get(GSK)||'{}')||{}}catch(e){return{}}})();
+const PRESET_GS={url:'https://script.google.com/macros/s/AKfycbzsY-OyTut6QwtcAzUTJK64m380aBdvpnru7izwjC8ZCyzUBT5Fsv4cG1uibv1XQfFj-Q/exec',token:'e407c9f2bd05c5f2389fb71b'};
+let gs=(()=>{try{const s=JSON.parse(st.get(GSK)||'{}')||{};return PRESET_GS.url?{...PRESET_GS}:(s.url?s:{})}catch(e){return PRESET_GS.url?{...PRESET_GS}:{}}})();
 function fromHash(){const h=new URLSearchParams(location.hash.slice(1));if(!(h.get('gs')&&h.get('t')))return false;gs={url:h.get('gs'),token:h.get('t')};st.set(GSK,JSON.stringify(gs));history.replaceState(null,'',location.pathname+location.search);return true}
 fromHash();
 let gsState=gs.url?'idle':'none',gsLast=0,gsErr='',gsMode=st.get(GMK)||'fetch',pushing=false,ticking=false,saveT=null,dirty=+(st.get(DTK)||0);
@@ -342,7 +344,7 @@ async function gsPush(){if(!gs.url||gsState==='choose'||pushing)return;pushing=t
   if(dirty===d0){dirty=0;st.set(DTK,'0')}else{clearTimeout(saveT);saveT=setTimeout(gsPush,1000)}}
  catch(e){gsState='error';gsErr=String(e.message||e);msg('Could not save to the sheet: '+gsErr+'. Your scores are kept on this device and retried.','bad')}
  pushing=false;drawChip()}
-async function gsAutoLoad(){try{await gsRead(dirty,false);gsState='ok';gsLast=Date.now();gsErr=''}catch(e){gsState='error';gsErr=String(e.message||e)}drawChip()}
+async function gsAutoLoad(){try{await gsRead(dirty,false);gsState='ok';gsLast=Date.now();gsErr='';if(!known.size&&keys().length){dirty=Math.max(dirty,1);drawChip();return gsPush()}}catch(e){gsState='error';gsErr=String(e.message||e)}drawChip()}
 async function gsTick(){if(!gs.url||ticking||pushing||gsState==='choose'||gsState==='syncing'||document.hidden)return;ticking=true;try{if(dirty>0)await gsPush();else await gsAutoLoad()}finally{ticking=false}}
 function openGs(){const p=$('#sp');p.hidden=false;if(!gs.token&&!$('#sk').value)$('#sk').value=randTok();else if(gs.token)$('#sk').value=gs.token;$('#su').value=gs.url||$('#su').value;gsCode();p.scrollIntoView({behavior:'smooth',block:'start'})}
 function gsCode(){$('#sg').value=GAS.replace('__TOKEN__',($('#sk').value.trim()||'TOKEN').replace(/[\\']/g,''))}
@@ -361,7 +363,7 @@ async function gsChoose(which){$('#sch').hidden=true;
   else{Object.keys(x.R).map(Number).filter(n=>!S.rounds[n]&&!S.del.includes(n)).forEach(n=>S.del.push(n));local()}}
  catch(e){msg('Could not read the sheet: '+e.message,'bad');$('#sch').hidden=false;return}
  gsState='idle';await gsPush();if(which!=='sheet'&&gsState==='ok')msg('This device’s scores are now in the sheet.','ok')}
-$('#sync').onclick=()=>{const p=$('#sp');if(p.hidden)openGs();else p.hidden=true};
+$('#sync').onclick=()=>{const p=$('#sp');if(p.hidden){openGs();if(!$('#sm').textContent)msg(gsState==='ok'?'Synced with your Google Sheet '+ago(gsLast)+'. Every change is sent automatically, from any device.':gsState==='error'?'Could not reach your Google Sheet ('+gsErr+'). Changes are kept here and retried.':'Connecting to your Google Sheet…',gsState==='error'?'bad':gsState==='ok'?'ok':'')}else p.hidden=true};
 $('#sx2').onclick=()=>{$('#sp').hidden=true};
 $('#sk').oninput=gsCode;$('#sn').onclick=()=>{$('#sk').value=randTok();gsCode();msg('New token made. Paste the updated script into Apps Script and deploy a new version before connecting.')};
 $('#sy').onclick=()=>{const t=$('#sg');t.select();let ok=false;try{ok=document.execCommand('copy')}catch(e){}
@@ -372,7 +374,7 @@ $('#sr').onclick=async()=>{if(!gs.url){msg('Connect a sheet first.','bad');retur
  try{const x=sheetState(await gsValues());known=x.sk;st.set(KNK,JSON.stringify([...known]));adopt(x);gsState='ok';gsLast=Date.now();msg('Reloaded '+Object.keys(x.R).length+' rounds from the sheet.','ok')}catch(e){msg('Could not read the sheet: '+e.message,'bad')}drawChip()};
 $('#sx').onclick=async()=>{if(!gs.url){msg('Connect this device first.','bad');return}const l=location.origin+location.pathname+'#gs='+encodeURIComponent(gs.url)+'&t='+encodeURIComponent(gs.token);
  try{await navigator.clipboard.writeText(l);msg('Setup link copied. Open it once on your other device — send it privately, it contains your token.','ok')}catch(e){$('#sg').value=l;$('#sg').closest('details').open=true;msg('Copy the setup link from the box below and open it on your other device.')}};
-$('#sd').onclick=()=>{gs={};st.del(GSK);gsState='none';gsErr='';dirty=0;st.set(DTK,'0');msg('Disconnected. Your scores stay on this device.');drawChip()};
+$('#sd').onclick=()=>{if(PRESET_GS.url){msg('This page is built to sync with your Google Sheet, so it reconnects automatically. Clear PRESET_GS in index.html to stop that.');return}gs={};st.del(GSK);gsState='none';gsErr='';dirty=0;st.set(DTK,'0');msg('Disconnected. Your scores stay on this device.');drawChip()};
 addEventListener('hashchange',()=>{if(fromHash()){gsState='idle';known=new Set();dirty=0;st.set(DTK,'0');gsAutoLoad()}});
 addEventListener('online',()=>{if(gsState==='error')gsPush()});
 addEventListener('beforeunload',e=>{if(gs.url&&dirty>0){gsPush();e.preventDefault();e.returnValue=''}});
