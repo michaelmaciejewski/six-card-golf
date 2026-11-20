@@ -74,14 +74,39 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
 .hole.sub .n{text-align:center;font:700 16px Inter}
 .fin{margin-top:16px;background:linear-gradient(145deg,#12905a,#08432a);color:#fff;border:0}.fin .n{font-size:22px}
 main{display:block}
+.tr{display:flex;gap:8px;align-items:center}
+.sync{border-radius:99px;padding:6px 12px;font-size:12px;font-weight:700;border:1px solid var(--line);background:var(--panel);box-shadow:var(--sh);white-space:nowrap;max-width:46vw;overflow:hidden;text-overflow:ellipsis}
+.sync::before{content:"●";margin-right:6px}
+.sync.ok{color:var(--good)}.sync.busy{color:var(--gold)}.sync.err{color:var(--red);border-color:var(--red)}.sync.warn{color:var(--gold);border-color:var(--gold)}.sync.off{color:var(--mute)}
+.sp{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;margin:6px 0 16px;box-shadow:var(--sh)}
+[hidden]{display:none!important}
+.sp input{flex:1;min-width:200px;padding:9px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit}
+.sp .row{justify-content:flex-start;margin-top:8px}
+.sp .msg{margin-top:8px;font-size:13px}.sp .msg:empty{display:none}.msg.bad{color:var(--red)}.msg.ok{color:var(--good)}
+@media(max-width:560px){.brand i{display:none}.pen label{display:none}}
 tr.go{cursor:pointer}tr.go:hover td{background:var(--chip)}
 tr.tot td{font-weight:700;background:var(--chip)}tr.fin td{background:var(--acc);color:#fff}tr.fin .win,tr.fin .pen-tag{color:#fff}
 td.hn{padding-top:10px}td .sc{width:76px;padding:7px}
 .res{white-space:nowrap}
 </style></head><body>
 <div class="bar"><div><div class="brand">⛳ Six-Card Golf <i>♠♥♦♣</i></div>
-<div class="pen"><label for="pv">Penalty</label><button id="pm" aria-label="Decrease">−</button><input id="pv" type="number" min="0" inputmode="numeric"><button id="pp" aria-label="Increase">+</button></div></div></div>
+<div class="tr"><button id="sync" class="sync off" title="Google Sheet sync">Local only</button><div class="pen"><label for="pv">Penalty</label><button id="pm" aria-label="Decrease">−</button><input id="pv" type="number" min="0" inputmode="numeric"><button id="pp" aria-label="Increase">+</button></div></div></div></div>
 <div class="wrap">
+<section id="sp" class="sp" hidden><div class="row"><h2 style="margin:0">☁️ Google Sheet sync</h2><button id="sx2" aria-label="Close">✕</button></div>
+<div id="sm" class="msg"></div>
+<div id="sch" class="row" hidden><button class="btn" id="cs">Use the sheet’s data</button><button id="cd">Use this device’s data</button></div>
+<ol class="mute" style="padding-left:18px;margin:8px 0">
+<li>In your Google Sheet open <b>Extensions → Apps Script</b>, delete what’s there, paste the script below and save.</li>
+<li><b>Deploy → New deployment → gear → Web app</b>. Execute as <b>Me</b>, Who has access <b>Anyone</b> (not “Anyone with Google account”). Approve the “unverified app” warning.</li>
+<li>Copy the <b>Web app URL</b> ending in <b>/exec</b> (not the Library URL), paste it here and tap Connect.</li>
+<li>After any script change: <b>Manage deployments → pencil → New version</b>.</li></ol>
+<div class="row"><input id="su" placeholder="https://script.google.com/macros/s/…/exec" autocomplete="off"></div>
+<div class="row"><input id="sk" placeholder="Token" autocomplete="off" spellcheck="false"><button id="sn">New token</button><button class="btn" id="sc">Connect</button></div>
+<details style="margin-top:10px"><summary class="mute" style="cursor:pointer">Apps Script code (token included)</summary>
+<textarea id="sg" readonly spellcheck="false" style="width:100%;height:220px;margin-top:8px;font:12px/1.4 ui-monospace,Menlo,monospace;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:10px"></textarea>
+<div class="row"><button id="sy">Copy script</button></div></details>
+<div class="row"><button id="ss">Save to Sheet now</button><button id="sr">Reload from Sheet</button><button id="sx">Copy link for another device</button><button id="sd">Disconnect</button></div>
+</section>
 <main id="main"></main>
 <p class="mute" style="text-align:center">Kings 0 · Aces 1 · 2–10 face value · Jacks &amp; Queens 10 · matching column 0 · Out-first player who doesn’t win the hole takes the penalty (ties: none) <br><button id="rs" style="margin-top:8px">Reset to original workbook data</button></p>
 </div>
@@ -91,7 +116,8 @@ const NM=['Michael','Hannah'],SU=['♠','♥'];
 let S=null,view='summary',ck=null;
 try{S=JSON.parse(localStorage.getItem('golf6v2'))}catch(e){}
 if(!S||!S.rounds)S={pen:5,rounds:JSON.parse(JSON.stringify(SEED))};
-const save=()=>{try{localStorage.setItem('golf6v2',JSON.stringify(S))}catch(e){}};
+const local=()=>{try{localStorage.setItem('golf6v2',JSON.stringify(S))}catch(e){}};
+let save=()=>{local()};
 const $=s=>document.querySelector(s);
 const keys=()=>Object.keys(S.rounds).map(Number).sort((a,b)=>a-b);
 function hole(h,pen){if(!h||h[0]==null||h[1]==null)return{done:false};const[m,x,o]=h,w=m<x?0:x<m?1:-1,p=(o!=null&&w>=0&&w!==o)?o:-1,t=[m,x];if(p>=0)t[p]+=pen;return{done:true,w,p,t,o}}
@@ -144,12 +170,212 @@ main.addEventListener('input',e=>{const t=e.target;if(!t.classList.contains('sc'
 main.addEventListener('keydown',e=>{if(e.key!=='Enter'||!e.target.classList.contains('sc'))return;e.preventDefault();const a=[...document.querySelectorAll('.sc')],i=a.indexOf(e.target);(a[i+1]||e.target).focus()});
 main.addEventListener('click',e=>{const t=e.target,g=t.closest('[data-r]'),o=t.closest('.of');
 if(o){const i=+o.dataset.i,h=S.rounds[view][i]||(S.rounds[view][i]=[null,null,null]),p=+o.dataset.o;h[2]=h[2]===p?null:p;save();paint(view)}
-else if(t.closest('#nw')){const n=Math.max(0,...keys())+1;S.rounds[n]=Array(18).fill(null);save();view=n;render();scrollTo(0,0)}
+else if(t.closest('#nw')){const n=Math.max(0,...keys())+1;S.rounds[n]=Array(18).fill(null);S.del=(S.del||[]).filter(x=>x!==n);save();view=n;render();scrollTo(0,0)}
 else if(t.closest('#bk')){view='summary';render()}
-else if(t.closest('#dl')){if(ck!='d'){ck='d';t.textContent='Tap again to confirm delete'}else{delete S.rounds[view];save();view='summary';render()}}
+else if(t.closest('#dl')){if(ck!='d'){ck='d';t.textContent='Tap again to confirm delete'}else{delete S.rounds[view];S.del=(S.del||[]).filter(x=>x!==view).concat([view]);save();view='summary';render()}}
 else if(g&&!g.disabled){view=+g.dataset.r;render();scrollTo(0,0)}});
 const setPen=v=>{S.pen=Math.max(0,Math.min(100,Math.floor(+v||0)));save();render()};
 $('#pm').onclick=()=>setPen(S.pen-1);$('#pp').onclick=()=>setPen(S.pen+1);$('#pv').onchange=e=>setPen(e.target.value);
-$('#rs').onclick=e=>{if(ck!='r'){ck='r';e.target.textContent='Tap again to erase all changes and reset'}else{S={pen:5,rounds:JSON.parse(JSON.stringify(SEED))};save();view='summary';render();e.target.textContent='Reset to original workbook data'}};
+$('#rs').onclick=e=>{if(ck!='r'){ck='r';e.target.textContent='Tap again to erase all changes and reset'}else{S={pen:5,rounds:JSON.parse(JSON.stringify(SEED)),del:[]};save();view='summary';render();e.target.textContent='Reset to original workbook data'}};
 render();
+
+/* ---------- Google Sheet sync: Apps Script web app (same approach as the PUBG stats project) ---------- */
+const TAB='Golf App Data';
+const HEAD=['Round','Hole','Michael','Hannah','Out First','Winner','Penalty On','Penalty Pts','Michael Net','Hannah Net','Deleted'];
+const GAS=`var TOKEN = '__TOKEN__';
+var SHEET_ID = ''; // empty = the spreadsheet this script is attached to
+var TAB = '${TAB}'; // the app keeps its data on this tab (created if missing)
+var KEYS = ['Round', 'Hole'];
+
+function sh_() {
+  var ss = SHEET_ID ? SpreadsheetApp.openById(SHEET_ID) : SpreadsheetApp.getActiveSpreadsheet();
+  if (!TAB) return ss.getSheets()[0];
+  return ss.getSheetByName(TAB) || ss.insertSheet(TAB);
+}
+function out_(o, cb) {
+  var s = JSON.stringify(o);
+  if (cb) return ContentService.createTextOutput(cb + '(' + s + ');').setMimeType(ContentService.MimeType.JAVASCRIPT);
+  return ContentService.createTextOutput(s).setMimeType(ContentService.MimeType.JSON);
+}
+function doGet(e) {
+  var p = (e && e.parameter) || {};
+  var cb = /^[A-Za-z_$][A-Za-z0-9_$]{0,60}$/.test(p.callback || '') ? p.callback : '';
+  if (p.token !== TOKEN) return out_({ok: false, error: 'bad token'}, cb);
+  var v = sh_().getDataRange().getValues().filter(function (r, i) {
+    return i === 0 || String(r[0]).trim() !== '';
+  });
+  return out_({ok: true, values: v}, cb);
+}
+function same_(a, b) {
+  var x = String(a).trim(), y = String(b).trim();
+  if (x === y) return true;
+  var nx = Number(x), ny = Number(y);
+  return x !== '' && y !== '' && !isNaN(nx) && !isNaN(ny) && Math.abs(nx - ny) < 0.0006;
+}
+function put_(sh, row, vals, mask) {
+  var c = 0;
+  while (c < mask.length) {
+    if (!mask[c]) { c++; continue; }
+    var s = c;
+    while (c < mask.length && mask[c]) c++;
+    sh.getRange(row, s + 1, 1, c - s).setValues([vals.slice(s, c)]);
+  }
+}
+function doPost(e) {
+  var raw = (e.parameter && e.parameter.payload) || (e.postData && e.postData.contents) || '{}';
+  var b = JSON.parse(raw);
+  if (b.token !== TOKEN) return out_({ok: false, error: 'bad token'});
+  var lock = LockService.getScriptLock();
+  lock.waitLock(20000);
+  var added = 0, updated = 0, removed = [], known = {};
+  (b.known || []).forEach(function (k) { known[String(k)] = true; });
+  try {
+    var sh = sh_();
+    var head = sh.getRange(1, 1, 1, Math.max(sh.getLastColumn(), 1)).getValues()[0].map(String);
+    if (head.length === 1 && head[0] === '') head = [];
+    var pos = b.header.map(function (h) {
+      var c = head.indexOf(h);
+      if (c < 0) { head.push(h); c = head.length - 1; sh.getRange(1, c + 1).setValue(h).setFontWeight('bold'); }
+      return c;
+    });
+    sh.setFrozenRows(1);
+    var n = head.length;
+    var lastRow = Math.max(sh.getLastRow(), 2);
+    var cur = sh.getRange(2, 1, lastRow - 1, n).getValues();
+    var forms = sh.getRange(2, 1, 1, n).getFormulas()[0];
+    var isF = head.map(function (h, i) { return String(forms[i] || '').charAt(0) === '='; });
+    var ki = KEYS.map(function (k) { return head.indexOf(k); });
+    var map = {}, firstEmpty = -1;
+    cur.forEach(function (r, i) {
+      if (String(r[ki[0]]).trim() === '') { if (firstEmpty < 0) firstEmpty = i; return; }
+      map[ki.map(function (j) { return String(r[j]).trim(); }).join('|')] = i;
+    });
+    var kb = KEYS.map(function (k) { return b.header.indexOf(k); });
+    var next = firstEmpty >= 0 ? firstEmpty : cur.length;
+    b.rows.forEach(function (r) {
+      var key = kb.map(function (j) { return String(r[j]).trim(); }).join('|');
+      var idx = map[key], isNew = idx === undefined, vals = [], mask = [];
+      if (isNew && known[key]) { removed.push(key); return; } // deleted in the sheet: keep it deleted
+      for (var i = 0; i < n; i++) { vals.push(''); mask.push(false); }
+      b.header.forEach(function (h, j) {
+        var c = pos[j];
+        if (isF[c]) return; // never overwrite formula columns
+        if (isNew || !same_(cur[idx][c], r[j])) { vals[c] = r[j]; mask[c] = true; }
+      });
+      if (!isNew && mask.indexOf(true) < 0) return;
+      var row;
+      if (isNew) { row = next + 2; next++; added++; } else { row = idx + 2; updated++; }
+      if (row > sh.getMaxRows()) sh.insertRowsAfter(sh.getMaxRows(), row - sh.getMaxRows());
+      put_(sh, row, vals, mask);
+    });
+  } finally {
+    lock.releaseLock();
+  }
+  return out_({ok: true, count: b.rows.length, added: added, updated: updated, removed: removed});
+}`;
+if(!Array.isArray(S.del))S.del=[];
+const st={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},del:k=>{try{localStorage.removeItem(k)}catch(e){}}};
+const GSK='golf6gs',KNK='golf6known',GMK='golf6mode',DTK='golf6dirty';
+let gs=(()=>{try{return JSON.parse(st.get(GSK)||'{}')||{}}catch(e){return{}}})();
+function fromHash(){const h=new URLSearchParams(location.hash.slice(1));if(!(h.get('gs')&&h.get('t')))return false;gs={url:h.get('gs'),token:h.get('t')};st.set(GSK,JSON.stringify(gs));history.replaceState(null,'',location.pathname+location.search);return true}
+fromHash();
+let gsState=gs.url?'idle':'none',gsLast=0,gsErr='',gsMode=st.get(GMK)||'fetch',pushing=false,ticking=false,saveT=null,dirty=+(st.get(DTK)||0);
+let known=new Set((()=>{try{return JSON.parse(st.get(KNK)||'[]')}catch(e){return[]}})());
+const msg=(t,k)=>{const e=$('#sm');e.textContent=t||'';e.className='msg '+(k||'')};
+const pill=(c,t,tip)=>{const e=$('#sync');e.className='sync '+c;e.textContent=t;e.title=tip||t};
+const num=v=>v===''||v==null||isNaN(+v)?null:+v;
+const ago=t=>{const m=Math.round((Date.now()-t)/60000);return m<1?'just now':m+' min ago'};
+const randTok=()=>{try{const a=new Uint8Array(12);crypto.getRandomValues(a);return[...a].map(b=>b.toString(16).padStart(2,'0')).join('')}catch(e){return String(Math.random()).slice(2,18)}};
+function drawChip(){if(!gs.url)return pill('warn','Connect Sheet','Tap to connect your Google Sheet');
+ if(gsState==='syncing')return pill('busy','Saving…','Saving to your Google Sheet');
+ if(gsState==='error')return pill('err','Sync failed','Could not reach your Google Sheet ('+gsErr+'). Changes are kept here and retried.');
+ if(gsState==='choose')return pill('warn','Choose data','The sheet already has data — choose which to keep');
+ if(dirty>0)return pill('busy','Unsaved','Changes waiting to be sent to your Google Sheet');
+ if(gsState==='ok')return pill('ok','Synced '+ago(gsLast).replace(' ago',''),'In sync with your Google Sheet. Last checked '+ago(gsLast)+'.');
+ pill('busy','Connecting…')}
+save=()=>{local();if(!gs.url)return;dirty++;st.set(DTK,String(dirty));drawChip();clearTimeout(saveT);saveT=setTimeout(gsPush,1000)};
+function rowsOut(){const out=[];keys().forEach(n=>{for(let i=0;i<18;i++){const h=S.rounds[n][i],c=hole(h,S.pen),v=x=>x==null?'':x;
+ out.push([n,i+1,v(h&&h[0]),v(h&&h[1]),h&&h[2]!=null?NM[h[2]]:'',c.done?(c.w<0?'Tie':NM[c.w]):'',c.done&&c.p>=0?NM[c.p]:'',S.pen,c.done?c.t[0]:'',c.done?c.t[1]:'',''])}});
+ S.del.filter(n=>!S.rounds[n]).forEach(n=>{for(let i=0;i<18;i++)out.push([n,i+1,'','','','','','','','','yes'])});return out}
+const rkey=r=>String(r[0]).trim()+'|'+String(r[1]).trim();
+function sheetState(v){const H=(v[0]||[]).map(String),ix=k=>H.indexOf(k),R={},D=[],sk=new Set();let pen=null;
+ v.slice(1).forEach(x=>{const n=parseInt(x[ix('Round')]),i=parseInt(x[ix('Hole')]);if(!n||!i||i>18)return;sk.add(n+'|'+i);
+  if(String(x[ix('Deleted')]||'').trim().toLowerCase()==='yes'){if(!D.includes(n))D.push(n);return}
+  R[n]=R[n]||Array(18).fill(null);const m=num(x[ix('Michael')]),h=num(x[ix('Hannah')]),of=String(x[ix('Out First')]||'').trim(),o=of===NM[0]?0:of===NM[1]?1:null;
+  if(m!=null||h!=null||o!=null)R[n][i-1]=[m,h,o];if(pen==null&&ix('Penalty Pts')>=0)pen=num(x[ix('Penalty Pts')])});
+ return{R,D:D.filter(n=>!R[n]),pen,sk}}
+const sig=(R,D,p)=>JSON.stringify([p,Object.keys(R).map(Number).sort((a,b)=>a-b).map(n=>[n,R[n].map(h=>h&&(h[0]!=null||h[1]!=null||h[2]!=null)?h:null)]),[...D].sort((a,b)=>a-b)]);
+function useJsonp(){if(gsMode!=='jsonp'){gsMode='jsonp';st.set(GMK,'jsonp')}}
+async function gsJson(r){let j;try{j=await r.json()}catch(e){throw new Error('unexpected reply. Deploy the script as a web app that Anyone can access')}if(!j.ok)throw new Error(j.error||'rejected');return j}
+function jsonp(url,ms){return new Promise((res,rej)=>{const cb='__gs'+Date.now().toString(36)+Math.random().toString(36).slice(2,7),sc=document.createElement('script');let done=false;
+ const end=()=>{done=true;clearTimeout(tm);try{delete window[cb]}catch(e){window[cb]=undefined}sc.remove()};
+ const tm=setTimeout(()=>{if(!done){end();rej(new Error('no reply from the sheet'))}},ms||20000);
+ window[cb]=d=>{if(done)return;end();res(d)};
+ sc.onerror=()=>{if(!done){end();rej(new Error('could not reach the sheet'))}};
+ sc.onload=()=>setTimeout(()=>{if(!done){end();rej(new Error('the Apps Script needs updating. Paste the new script and deploy a new version'))}},60);
+ sc.src=url+(url.includes('?')?'&':'?')+'callback='+cb;document.head.appendChild(sc)})}
+async function gsGet(qs){const u=gs.url+(gs.url.includes('?')?'&':'?')+qs;
+ if(gsMode!=='jsonp'){try{return await gsJson(await fetch(u))}catch(e){if(!(e instanceof TypeError))throw e;useJsonp()}}
+ const j=await jsonp(u);if(!j||!j.ok)throw new Error((j&&j.error)||'rejected');return j}
+function formPost(body){return new Promise((res,rej)=>{const n='gsF'+Date.now().toString(36),f=document.createElement('iframe'),fm=document.createElement('form'),inp=document.createElement('input');let sent=false,done=false;
+ f.name=n;f.title='sync';f.setAttribute('aria-hidden','true');f.style.cssText='position:absolute;width:0;height:0;border:0;visibility:hidden';
+ fm.method='POST';fm.action=gs.url;fm.target=n;fm.style.display='none';inp.type='hidden';inp.name='payload';inp.value=JSON.stringify(body);fm.appendChild(inp);
+ const fin=ok=>{if(done)return;done=true;clearTimeout(tm);fm.remove();setTimeout(()=>f.remove(),1500);ok?res({ok:true}):rej(new Error('the sheet did not answer'))};
+ const tm=setTimeout(()=>fin(false),30000);
+ f.onload=()=>{if(!sent){sent=true;fm.submit();return}fin(true)};
+ document.body.appendChild(fm);document.body.appendChild(f);
+ setTimeout(()=>{if(!sent){sent=true;fm.submit()}},300)})}
+async function gsSend(body){if(gsMode!=='jsonp'){try{return await gsJson(await fetch(gs.url,{method:'POST',body:JSON.stringify(body)}))}catch(e){if(!(e instanceof TypeError))throw e;useJsonp()}}return formPost(body)}
+const gsValues=async()=>(await gsGet('token='+encodeURIComponent(gs.token)+'&t='+Date.now())).values||[];
+function adopt(x){S.rounds=x.R;S.del=x.D;if(x.pen!=null)S.pen=x.pen;local();if(view!=='summary'&&!S.rounds[view])view='summary';
+ const ae=document.activeElement,fi=ae&&ae.classList&&ae.classList.contains('sc')?[ae.dataset.i,ae.dataset.p]:null;render();
+ if(fi){const e=document.querySelector(`.sc[data-i="${fi[0]}"][data-p="${fi[1]}"]`);if(e)e.focus()}}
+async function gsRead(d0,afterPush){const x=sheetState(await gsValues()),out=rowsOut(),lk=out.map(rkey);
+ if(afterPush){const miss=lk.filter(k=>!x.sk.has(k)&&!known.has(k)).length;if(miss)throw new Error(miss+' hole row'+(miss>1?'s':'')+' did not reach the sheet')}
+ const gone=new Set(lk.filter(k=>!x.sk.has(k)&&known.has(k)).map(k=>k.split('|')[0])).size;
+ known=x.sk;st.set(KNK,JSON.stringify([...known]));
+ const changed=x.sk.size>0&&sig(x.R,x.D,x.pen==null?S.pen:x.pen)!==sig(S.rounds,S.del.filter(n=>!S.rounds[n]),S.pen);
+ if(changed&&dirty===d0){adopt(x);msg(gone?'Rows deleted in the Google Sheet were removed here too.':afterPush?'':'Loaded the latest scores from your Google Sheet.','ok')}
+ return changed}
+async function gsPush(){if(!gs.url||gsState==='choose'||pushing)return;pushing=true;gsState='syncing';drawChip();const d0=dirty;
+ try{await gsSend({token:gs.token,header:HEAD,rows:rowsOut(),known:[...known]});await gsRead(d0,true);gsState='ok';gsLast=Date.now();gsErr='';
+  if(dirty===d0){dirty=0;st.set(DTK,'0')}else{clearTimeout(saveT);saveT=setTimeout(gsPush,1000)}}
+ catch(e){gsState='error';gsErr=String(e.message||e);msg('Could not save to the sheet: '+gsErr+'. Your scores are kept on this device and retried.','bad')}
+ pushing=false;drawChip()}
+async function gsAutoLoad(){try{await gsRead(dirty,false);gsState='ok';gsLast=Date.now();gsErr=''}catch(e){gsState='error';gsErr=String(e.message||e)}drawChip()}
+async function gsTick(){if(!gs.url||ticking||pushing||gsState==='choose'||gsState==='syncing'||document.hidden)return;ticking=true;try{if(dirty>0)await gsPush();else await gsAutoLoad()}finally{ticking=false}}
+function openGs(){const p=$('#sp');p.hidden=false;if(!gs.token&&!$('#sk').value)$('#sk').value=randTok();else if(gs.token)$('#sk').value=gs.token;$('#su').value=gs.url||$('#su').value;gsCode();p.scrollIntoView({behavior:'smooth',block:'start'})}
+function gsCode(){$('#sg').value=GAS.replace('__TOKEN__',($('#sk').value.trim()||'TOKEN').replace(/[\\']/g,''))}
+async function gsConnect(){const url=$('#su').value.trim(),tok=$('#sk').value.trim().replace(/[\\']/g,''),btn=$('#sc');
+ if(!/^https:\/\/script\.google\.com\/.+\/exec(\?.*)?$/.test(url)){msg(/\/library\//.test(url)?'That is the Library URL. Use the Web app URL, which ends in /exec.':/\/dev(\?.*)?$/.test(url)?'That link ends in /dev. Use the Web app URL, which ends in /exec.':'Paste the Web app URL. It starts with https://script.google.com/macros/s/ and ends in /exec.','bad');return}
+ if(!tok){msg('The token cannot be empty.','bad');return}
+ const prev=gs;gs={url,token:tok};msg('Connecting to your sheet…');btn.disabled=true;
+ try{const v=await gsValues(),x=sheetState(v);st.set(GSK,JSON.stringify(gs));known=x.sk;st.set(KNK,JSON.stringify([...known]));
+  if(!x.sk.size){gsState='idle';msg('Connected. Saving your scores to the sheet…','ok');await gsPush();if(gsState==='ok')msg('Connected — all '+keys().length+' rounds are now in the “'+TAB+'” tab.','ok')}
+  else{gsState='choose';$('#sch').hidden=false;msg('Connected. The sheet already has '+Object.keys(x.R).length+' rounds. Choose which data to start from — saving is paused until you do.')}}
+ catch(e){gs=prev;msg('Could not connect: '+(e.message||e)+'. Check that the URL ends in /exec, the token matches the script, and access is set to Anyone.','bad')}
+ btn.disabled=false;drawChip()}
+async function gsChoose(which){$('#sch').hidden=true;
+ try{const x=sheetState(await gsValues());known=x.sk;st.set(KNK,JSON.stringify([...known]));
+  if(which==='sheet'){adopt(x);dirty=0;st.set(DTK,'0');msg('Loaded '+Object.keys(x.R).length+' rounds from the sheet.','ok')}
+  else{Object.keys(x.R).map(Number).filter(n=>!S.rounds[n]&&!S.del.includes(n)).forEach(n=>S.del.push(n));local()}}
+ catch(e){msg('Could not read the sheet: '+e.message,'bad');$('#sch').hidden=false;return}
+ gsState='idle';await gsPush();if(which!=='sheet'&&gsState==='ok')msg('This device’s scores are now in the sheet.','ok')}
+$('#sync').onclick=()=>{const p=$('#sp');if(p.hidden)openGs();else p.hidden=true};
+$('#sx2').onclick=()=>{$('#sp').hidden=true};
+$('#sk').oninput=gsCode;$('#sn').onclick=()=>{$('#sk').value=randTok();gsCode();msg('New token made. Paste the updated script into Apps Script and deploy a new version before connecting.')};
+$('#sy').onclick=()=>{const t=$('#sg');t.select();let ok=false;try{ok=document.execCommand('copy')}catch(e){}
+ if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t.value).then(()=>msg('Script copied.','ok'),()=>msg(ok?'Script copied.':'Select the script and copy it by hand.'));else msg(ok?'Script copied.':'Select the script and copy it by hand.')};
+$('#sc').onclick=gsConnect;$('#cs').onclick=()=>gsChoose('sheet');$('#cd').onclick=()=>gsChoose('device');
+$('#ss').onclick=()=>{if(!gs.url){msg('Connect a sheet first.','bad');return}if(gsState==='choose'){msg('Choose which data to start from first.','bad');return}dirty=Math.max(dirty,1);gsPush().then(()=>{if(gsState==='ok')msg('Saved to the sheet.','ok')})};
+$('#sr').onclick=async()=>{if(!gs.url){msg('Connect a sheet first.','bad');return}if(dirty>0){msg('You have unsaved changes — tap “Save to Sheet now” first.','bad');return}
+ try{const x=sheetState(await gsValues());known=x.sk;st.set(KNK,JSON.stringify([...known]));adopt(x);gsState='ok';gsLast=Date.now();msg('Reloaded '+Object.keys(x.R).length+' rounds from the sheet.','ok')}catch(e){msg('Could not read the sheet: '+e.message,'bad')}drawChip()};
+$('#sx').onclick=async()=>{if(!gs.url){msg('Connect this device first.','bad');return}const l=location.origin+location.pathname+'#gs='+encodeURIComponent(gs.url)+'&t='+encodeURIComponent(gs.token);
+ try{await navigator.clipboard.writeText(l);msg('Setup link copied. Open it once on your other device — send it privately, it contains your token.','ok')}catch(e){$('#sg').value=l;$('#sg').closest('details').open=true;msg('Copy the setup link from the box below and open it on your other device.')}};
+$('#sd').onclick=()=>{gs={};st.del(GSK);gsState='none';gsErr='';dirty=0;st.set(DTK,'0');msg('Disconnected. Your scores stay on this device.');drawChip()};
+addEventListener('hashchange',()=>{if(fromHash()){gsState='idle';known=new Set();dirty=0;st.set(DTK,'0');gsAutoLoad()}});
+addEventListener('online',()=>{if(gsState==='error')gsPush()});
+addEventListener('beforeunload',e=>{if(gs.url&&dirty>0){gsPush();e.preventDefault();e.returnValue=''}});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)gsTick()});addEventListener('focus',gsTick);setInterval(gsTick,45000);setInterval(()=>{if(gsState==='ok'&&!dirty)drawChip()},30000);
+drawChip();if(gs.url){if(dirty>0)gsPush();else gsAutoLoad()}
 </script></body></html>
